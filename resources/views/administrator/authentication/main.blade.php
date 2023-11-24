@@ -10,6 +10,8 @@
     <link rel="shortcut icon" href="{{ array_key_exists('favicon', $settings) ? img_src($settings['favicon'], 'settings') : '' }}" type="image/png">
 
     <link rel="stylesheet" href="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/src/parsley.min.css">
+  
 
 
     @stack('css')
@@ -19,8 +21,10 @@
     @yield('content')
 
 
+    <script src="{{ asset('jquery/dist/jquery.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/extensions/toastify-js/src/toastify.js') }}"></script>
     <script src="{{ asset('templateAdmin/assets/js/pages/toastify.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js"></script>
 
 
     <script>

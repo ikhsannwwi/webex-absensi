@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\admin\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -12,6 +14,47 @@ class AuthController extends Controller
         return view('administrator.authentication.login');
     }
 
+    public function checkEmail(Request $request){
+        if($request->ajax()){
+            $data = User::where('email', $request->email);
+    
+            if(empty($data)){
+                return response()->json([
+                    'message' => 'Email tidak terdaftar',
+                    'valid' => false
+                ]);
+            } else {
+                return response()->json([
+                    'valid' => true
+                ]);
+            }
+        }
+    }
+    
+    public function checkPassword(Request $request) {
+        if ($request->ajax()) {
+            $user = User::where('email', $request->email)->first();
+    
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Email tidak ditemukan',
+                    'valid' => false
+                ]);
+            }
+    
+            if (Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'valid' => true
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Password tidak sesuai',
+                    'valid' => false
+                ]);
+            }
+        }
+    }
+    
     public function loginProses(Request $request)
     {
         // $validator = Validator::make($request->all(), [
