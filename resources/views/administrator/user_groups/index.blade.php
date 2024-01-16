@@ -30,10 +30,10 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th width="325px">Nama</th>
+                            <th width="15px">No</th>
+                            <th width="100%">Nama</th>
                             <th width="250px">Status</th>
-                            <th width="200px">Action</th>
+                            <th width="250px">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -90,6 +90,7 @@
                         data: 'action',
                         name: 'action',
                         searchable: false,
+                        sortable: false,
                         class: 'text-center'
                     }
                 ],

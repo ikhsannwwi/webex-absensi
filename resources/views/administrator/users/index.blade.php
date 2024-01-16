@@ -32,12 +32,12 @@
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th width="25">No</th>
-                            <th width="">User Group</th>
-                            <th width="">Nama</th>
-                            <th width="">Email</th>
-                            <th width="">Status</th>
-                            <th width="200">Action</th>
+                            <th width="15px">No</th>
+                            <th width="200px">User Group</th>
+                            <th width="100%">Nama</th>
+                            <th width="250px">Email</th>
+                            <th width="100px">Status</th>
+                            <th width="250px">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -102,6 +102,7 @@
                     {
                         data: 'action',
                         name: 'action',
+                        sortable: false,
                         searchable: false,
                         class: 'text-center'
                     }

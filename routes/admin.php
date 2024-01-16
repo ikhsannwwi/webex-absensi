@@ -10,6 +10,7 @@ use App\Http\Controllers\admin\SettingController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LogSystemController;
 use App\Http\Controllers\admin\UserGroupController;
+use App\Http\Controllers\admin\SettingSmtpController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,8 +85,12 @@ Route::prefix('admin')->group(function () {
         Route::post('profile/checkEmail',[ProfileController::class, 'checkEmail'])->name('admin.profile.checkEmail');
         
         //Setting
-        Route::get('settings', [SettingController::class, 'index'])->name('admin.settings');
-        Route::put('settings/update', [SettingController::class, 'update'])->name('admin.settings.update');
+        Route::get('setting-general', [SettingController::class, 'index'])->name('admin.settings.general');
+        Route::put('setting-general/update', [SettingController::class, 'update'])->name('admin.settings.general.update');
+
+        //Setting SMTP
+        Route::get('setting-smtp', [SettingSmtpController::class, 'index'])->name('admin.settings.smtp');
+        Route::put('setting-smtp/update', [SettingSmtpController::class, 'update'])->name('admin.settings.smtp.update');
 
         //Modul dan Modul Akses
         Route::get('module', [ModuleController::class, 'index'])->name('admin.module');

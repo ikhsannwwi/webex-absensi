@@ -37,7 +37,7 @@
                         <li><a class="dropdown-item user-text"
                                 href="{{ route('admin.profile', auth()->user()->kode) }}"><i
                                     class="fa fa-user-circle"></i> Profile</a></li>
-                        <li><a class="dropdown-item user-text" href="{{ route('admin.settings') }}"><i
+                        <li><a class="dropdown-item user-text" href="{{ route('admin.settings.general') }}"><i
                                     class="fa fa-cog"></i> Settings</a></li>
                         <li>
                             <hr class="dropdown-divider">

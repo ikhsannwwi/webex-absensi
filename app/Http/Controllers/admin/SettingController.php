@@ -158,7 +158,7 @@ class SettingController extends Controller
         //Write log
         createLog(static::$module, __FUNCTION__, 0,$logs);
 
-        return redirect(route('admin.settings'))->with(['success' => 'Data berhasil di update.']);
+        return redirect(route('admin.settings.general'))->with(['success' => 'Data berhasil di update.']);
 
     }
 }

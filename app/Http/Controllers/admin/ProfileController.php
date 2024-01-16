@@ -16,15 +16,35 @@ class ProfileController extends Controller
 
     public function index($kode) {
         //Check permission
-        if (auth()->user()->kode != 'daysf-01' && $kode != auth()->user()->kode) {
+        if (auth()->user()->kode != 'daysf' && $kode != auth()->user()->kode) {
             abort(403);
         }
         
         // Temukan data pengguna berdasarkan kode
+        // Temukan data pengguna berdasarkan kode
         $data = Profile::with('user')
         ->where('user_kode',$kode)
         ->first();
-        $sosmed = json_decode($data->sosial_media, true); // Mengubah JSON menjadi array
+        if (!$data) {
+            # code...
+
+            $sosmedData = [
+                'linkedin' => '',
+                'twitter' => '',
+                'instagram' => '',
+                'facebook' => '',
+            ];
+            $sosmedJson = json_encode($sosmedData);
+            $profile = Profile::create([
+                'user_kode' => auth()->user() ? auth()->user()->kode : '',
+                'sosial_media' => $sosmedJson,
+            ]);
+
+            $profile->save();
+            $sosmed = json_decode($sosmedJson, true); // Mengubah JSON menjadi array
+        }else{
+            $sosmed = json_decode($data->sosial_media, true); // Mengubah JSON menjadi array
+        }
         // dd($sosmed);
         // Jika data tidak ditemukan, tampilkan pesan kesalahan atau arahkan ke halaman lain
         if (!$data) {

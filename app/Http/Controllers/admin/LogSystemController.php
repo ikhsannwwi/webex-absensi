@@ -73,6 +73,10 @@ class LogSystemController extends Controller
     {
         $data_user = User::query()->with('user_group');
 
+        if (auth()->user()->email != 'dev@daysf.com') {
+            $data_user->where('email', '!=', 'dev@daysf.com')->get();
+        }
+
         return DataTables::of($data_user)
             ->make(true);
     }

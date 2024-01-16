@@ -99,17 +99,22 @@
                         <span>Profile</span>
                     </a>
                 </li>
-                <li class="sidebar-item  has-sub {{ Route::is('admin.settings*','admin.module*') ? 'active' : '' }}">
+                <li class="sidebar-item  has-sub {{ Route::is('admin.settings.general*','admin.module*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>
                         <span>Settings</span>
                     </a>
                     <ul class="submenu ">
-                        <li class="submenu-item {{ Route::is('admin.settings*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.settings') }}">Setting General</a>
+                        <li class="submenu-item {{ Route::is('admin.setting.general*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.settings.general') }}">Setting General</a>
                         </li>
+                        @if (auth()->user()->email == 'dev@daysf.com')
                         <li class="submenu-item {{ Route::is('admin.module*') ? 'active' : '' }}">
                             <a href="{{ route('admin.module') }}">Modul Management</a>
+                        </li>
+                        @endif
+                        <li class="submenu-item {{ Route::is('admin.settings.smtp*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.settings.smtp') }}">Setting Smtp</a>
                         </li>
                     </ul>
                 </li>
