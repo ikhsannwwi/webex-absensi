@@ -19,6 +19,8 @@ class CreateUserGroupPermissionsTable extends Migration
             $table->string('module_access_id');
             $table->string('status');
             $table->timestamps();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
         });
     }
 

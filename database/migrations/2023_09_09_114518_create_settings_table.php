@@ -18,8 +18,8 @@ class CreateSettingsTable extends Migration
             $table->string('name');
             $table->text('value');
             $table->timestamps();
-            $table->datetime('created_by')->nullable();
-            $table->bigint('updated_by')->nullable();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
         });
     }
 

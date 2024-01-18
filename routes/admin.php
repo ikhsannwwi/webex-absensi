@@ -25,6 +25,12 @@ use App\Http\Controllers\admin\SettingSmtpController;
 
 // ------------------------------------------  Admin -----------------------------------------------------------------
 Route::prefix('admin')->group(function () {
+    //Reset Password
+    Route::get('profile/password/request', [ProfileController::class, 'request'])->name('admin.profile.password.request');
+    Route::post('profile/password/request', [ProfileController::class, 'email'])->name('admin.profile.password.email');
+    Route::get('profile/password/reset/{token}', [ProfileController::class, 'resetPassword'])->name('admin.profile.password.reset');
+    Route::post('profile/password/reset/{token}', [ProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
+    
     Route::get('login', [AuthController::class, 'login'])->name('admin.login');
     Route::post('login/checkEmail', [AuthController::class, 'checkEmail'])->name('admin.login.checkEmail');
     Route::post('login/checkPassword', [AuthController::class, 'checkPassword'])->name('admin.login.checkPassword');
@@ -101,5 +107,10 @@ Route::prefix('admin')->group(function () {
         Route::put('module/update', [ModuleController::class, 'update'])->name('admin.module.update');
         Route::delete('module/delete', [ModuleController::class, 'delete'])->name('admin.module.delete');
         Route::get('module/getDetail-{id}', [ModuleController::class, 'getDetail'])->name('admin.module.getDetail');
+
+        //Statistic
+        Route::get('statistic', [StatisticController::class, 'index'])->name('admin.statistic');
+        Route::get('statistic/getData', [StatisticController::class, 'getData'])->name('admin.statistic.getData');
+        Route::get('statistic/getDetail{id}', [StatisticController::class, 'getDetail'])->name('admin.statistic.getDetail');
     });
 });

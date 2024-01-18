@@ -18,6 +18,8 @@ class CreateUserGroupsTable extends Migration
             $table->string('name');
             $table->string('status');
             $table->timestamps();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
         });
     }
 

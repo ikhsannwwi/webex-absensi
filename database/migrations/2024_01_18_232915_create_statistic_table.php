@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLogsTable extends Migration
+class CreateStatisticTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
+        Schema::create('statistic', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->string('url');
             $table->string('ip_address');
-            $table->string('module');
-            $table->string('action');
-            $table->string('data_id');
-            $table->timestamps();
+            $table->string('device');
+            $table->string('platform');
+            $table->string('browser');
+            $table->timestamp('visit_time');
         });
     }
 
@@ -31,6 +31,6 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('statistic');
     }
 }

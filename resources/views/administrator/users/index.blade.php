@@ -34,10 +34,10 @@
                         <tr>
                             <th width="15px">No</th>
                             <th width="200px">User Group</th>
-                            <th width="100%">Nama</th>
-                            <th width="250px">Email</th>
-                            <th width="100px">Status</th>
-                            <th width="250px">Action</th>
+                            <th width="50%">Nama</th>
+                            <th width="50%">Email</th>
+                            <th width="150px">Status</th>
+                            <th width="225px">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -102,8 +102,8 @@
                     {
                         data: 'action',
                         name: 'action',
-                        sortable: false,
                         searchable: false,
+                        sortable: false,
                         class: 'text-center'
                     }
                 ],

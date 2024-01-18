@@ -32,8 +32,8 @@
                         <tr>
                             <th width="15px">No</th>
                             <th width="100%">Nama</th>
-                            <th width="250px">Status</th>
-                            <th width="250px">Action</th>
+                            <th width="150px">Status</th>
+                            <th width="225px">Action</th>
                         </tr>
                     </thead>
                 </table>

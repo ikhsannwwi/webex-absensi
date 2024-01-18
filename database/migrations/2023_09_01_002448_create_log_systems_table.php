@@ -25,6 +25,8 @@ class CreateLogSystemsTable extends Migration
             $table->string('data_id');
             $table->longtext('data');
             $table->timestamp('created_at');
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
         });
     }
 

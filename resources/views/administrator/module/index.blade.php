@@ -16,7 +16,7 @@
                         </nav>
                     </div>
                     <div class="col-6">
-                        @if (isallowed('user', 'add'))
+                        @if (isallowed('module_management', 'add'))
                             <a href="{{ route('admin.module.add') }}" class="btn btn-primary mx-3 float-end">Tambah
                                 Data</a>
                         @endif
@@ -32,7 +32,7 @@
                             <th width="15px">No</th>
                             <th width="50%">Nama</th>
                             <th width="50%">Identifier</th>
-                            <th width="250px">Action</th>
+                            <th width="225px">Action</th>
                         </tr>
                     </thead>
                 </table>

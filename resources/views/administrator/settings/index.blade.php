@@ -16,7 +16,7 @@
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <form action="{{ route('admin.settings.general.update') }}" method="post" enctype="multipart/form-data"
+                    <form action="{{ route('admin.settings.update') }}" method="post" enctype="multipart/form-data"
                         class="form" id="form" data-parsley-validate>
                         @csrf
                         @method('PUT')
@@ -49,8 +49,8 @@
                                 <div class="form-group mandatory">
                                     <label for="logoAppAdminInputFile" class="form-label">Logo App Admin</label>
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div class="preview_logoappadmin thumbnail mb20">
-                                            <img width="500"
+                                        <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
+                                            <img width="200px"
                                                 src="{{ array_key_exists('logo_app_admin', $settings) ? img_src($settings['logo_app_admin'], 'settings') : '' }}">
                                         </div>
                                         <div class="mt-3">
@@ -70,8 +70,8 @@
                                 <div class="form-group mandatory">
                                     <label for="faviconInputFile" class="form-label">Favicon</label>
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div class="preview_favicon thumbnail mb20">
-                                            <img width="500"
+                                        <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
+                                            <img width="200px"
                                                 src="{{ array_key_exists('favicon', $settings) ? img_src($settings['favicon'], 'settings') : '' }}">
                                         </div>
                                         <div class="mt-3">
@@ -91,8 +91,8 @@
                                     <label for="backgroundLoginPanelAdminInputFile" class="form-label">Background Login
                                         Panel Admin</label>
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div class="preview_background_login_panel_admin thumbnail mb20" data-trigger="fileinput">
-                                            <img width="500"
+                                        <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
+                                            <img width="200px"
                                                 src="{{ array_key_exists('background_login_panel_admin', $settings) ? img_src($settings['background_login_panel_admin'], 'settings') : '' }}">
                                         </div>
                                         <div class="mt-3">
@@ -135,90 +135,6 @@
     <!-- Tambahkan FileInput JavaScript -->
     <script src="{{ asset_administrator('assets/plugins/form-jasnyupload/fileinput.min.js') }}"></script>
 
-    <script>
-        const logoAppAdminInputFile = document.getElementById("logoAppAdminInputFile");
-        const previewContainerLogoAppAdmin = document.querySelector(".preview_logoappadmin");
-    
-        logoAppAdminInputFile.addEventListener("change", function() {
-            const files = this.files;
-    
-            // Hapus gambar-gambar sebelumnya
-            previewContainerLogoAppAdmin.innerHTML = '';
-    
-            // Ambil satu file saja
-            const file = files[0];
-            const imageType = /^image\//;
-    
-            if (imageType.test(file.type)) {
-                const imgContainer = document.createElement("div");
-                imgContainer.classList.add("img-thumbnail-container");
-    
-                const img = document.createElement("img");
-                img.classList.add("img-thumbnail");
-                img.width = 500; // Sesuaikan ukuran gambar sesuai kebutuhan
-                img.src = URL.createObjectURL(file);
-    
-                imgContainer.appendChild(img);
-                previewContainerLogoAppAdmin.appendChild(imgContainer);
-            }
-        });
-    
-        const faviconInputFile = document.getElementById("faviconInputFile");
-        const previewContainerFavicon = document.querySelector(".preview_favicon");
-    
-        faviconInputFile.addEventListener("change", function() {
-            const files = this.files;
-    
-            // Hapus gambar-gambar sebelumnya
-            previewContainerFavicon.innerHTML = '';
-    
-            // Ambil satu file saja
-            const file = files[0];
-            const imageType = /^image\//;
-    
-            if (imageType.test(file.type)) {
-                const imgContainer = document.createElement("div");
-                imgContainer.classList.add("img-thumbnail-container");
-    
-                const img = document.createElement("img");
-                img.classList.add("img-thumbnail");
-                img.width = 500; // Sesuaikan ukuran gambar sesuai kebutuhan
-                img.src = URL.createObjectURL(file);
-    
-                imgContainer.appendChild(img);
-                previewContainerFavicon.appendChild(imgContainer);
-            }
-        });
-    
-        const backgroundLoginPanelAdminInputFile = document.getElementById("backgroundLoginPanelAdminInputFile");
-        const previewContainerBackgroundLoginPanelAdmin = document.querySelector(".preview_background_login_panel_admin");
-    
-        backgroundLoginPanelAdminInputFile.addEventListener("change", function() {
-            const files = this.files;
-    
-            // Hapus gambar-gambar sebelumnya
-            previewContainerBackgroundLoginPanelAdmin.innerHTML = '';
-    
-            // Ambil satu file saja
-            const file = files[0];
-            const imageType = /^image\//;
-    
-            if (imageType.test(file.type)) {
-                const imgContainer = document.createElement("div");
-                imgContainer.classList.add("img-thumbnail-container");
-    
-                const img = document.createElement("img");
-                img.classList.add("img-thumbnail");
-                img.width = 500; // Sesuaikan ukuran gambar sesuai kebutuhan
-                img.src = URL.createObjectURL(file);
-    
-                imgContainer.appendChild(img);
-                previewContainerBackgroundLoginPanelAdmin.appendChild(imgContainer);
-            }
-        });
-    </script>
-    
-    
     <script type="text/javascript">
         $(document).ready(function() {
 
@@ -257,31 +173,20 @@
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
+                indicatorBlock();
 
                 // Validate the form using Parsley
                 if ($(form).parsley().validate()) {
-                    // Disable the submit button and show the "Please wait..." message
-                    submitButton.querySelector('.indicator-label').style.display = 'none';
-                    submitButton.querySelector('.indicator-progress').style.display =
-                        'inline-block';
+                    indicatorSubmit();
 
-                    // Perform your asynchronous form submission here
-                    // Simulating a 2-second delay for demonstration
-                    setTimeout(function() {
-                        // Re-enable the submit button and hide the "Please wait..." message
-                        submitButton.querySelector('.indicator-label').style.display =
-                            'inline-block';
-                        submitButton.querySelector('.indicator-progress').style.display =
-                            'none';
-
-                        // Submit the form
-                        form.submit();
-                    }, 2000);
+                    // Submit the form
+                    form.submit();
                 } else {
                     // Handle validation errors
                     const validationErrors = [];
                     $(form).find(':input').each(function() {
                         const field = $(this);
+                        indicatorNone();
                         if (!field.parsley().isValid()) {
                             const attrName = field.attr('name');
                             const errorMessage = field.parsley().getErrorsMessages().join(
@@ -292,6 +197,29 @@
                     console.log("Validation errors:", validationErrors.join('\n'));
                 }
             });
+
+            function indicatorSubmit() {
+                submitButton.querySelector('.indicator-label').style.display =
+                    'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
+            }
+
+            function indicatorNone() {
+                submitButton.querySelector('.indicator-label').style.display =
+                    'inline-block';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'none';
+                submitButton.disabled = false;
+            }
+
+            function indicatorBlock() {
+                // Disable the submit button and show the "Please wait..." message
+                submitButton.disabled = true;
+                submitButton.querySelector('.indicator-label').style.display = 'none';
+                submitButton.querySelector('.indicator-progress').style.display =
+                    'inline-block';
+            }
 
         });
     </script>

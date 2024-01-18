@@ -42,7 +42,7 @@
                         <tr>
                             <th width="15px">No</th>
                             <th width="100%">User</th>
-                            <th width="150px">Module</th>
+                            <th width="200px">Module</th>
                             <th width="200px">Action</th>
                             <th width="200px">Tanggal</th>
                         </tr>
