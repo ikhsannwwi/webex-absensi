@@ -9,14 +9,15 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.settings') }}">Setting</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.settings') }}">Menu Setting</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.settings.admin') }}">Admin</a></li>
                         <li class="breadcrumb-item active" aria-current="page">General</li>
                     </ol>
                 </nav>
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <form action="{{ route('admin.settings.update') }}" method="post" enctype="multipart/form-data"
+                    <form action="{{ route('admin.settings.admin.general.update') }}" method="post" enctype="multipart/form-data"
                         class="form" id="form" data-parsley-validate>
                         @csrf
                         @method('PUT')

@@ -19,6 +19,11 @@ function asset_frontpage($url)
 	return asset('frontpage/' . $url);
 }
 
+function template_administrator($url)
+{
+	return asset('templateAdmin/' . $url);
+}
+
 function upload_path($type = '', $file = '')
 {
 	switch ($type) {

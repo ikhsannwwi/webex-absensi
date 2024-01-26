@@ -21,7 +21,7 @@ Route::get('/ms-admin-ikhsannawawi', function () {
     return redirect()->route('index');
 });
 
-Route::get('/', [landingController::class, 'index'])->name('index');
+Route::get('/', [landingController::class, 'index'])->name('web.index');
 Route::get('/category/game-android', [landingController::class, 'game_android'])->name('game_android');
 Route::get('/category/game-android-mod', [landingController::class, 'game_android_mod'])->name('game_android_mod');
 Route::get('/category/game-pc', [landingController::class, 'game_pc'])->name('game_pc');

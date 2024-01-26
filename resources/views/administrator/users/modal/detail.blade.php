@@ -50,14 +50,6 @@
                         return namaBulan[angkaBulan - 1] || "";
                     }
 
-                    // Ubah format tanggal
-                    var rawDate = data.profile ? (data.profile.tanggal_lahir ? data.profile.tanggal_lahir : '') : '';
-                    var tanggal = new Date(rawDate).getDate();
-                    var bulan = new Date(rawDate).getMonth() +
-                        1; // Tambahkan 1 karena bulan dimulai dari 0
-                    var tahun = new Date(rawDate).getFullYear();
-
-                    var formattedDate = tanggal + " " + formatBulan(bulan) + " " + tahun;
 
                     modalBody.html(
                         '<div class="row">' +
@@ -108,6 +100,16 @@
                     );
 
                     if (data.profile) {
+                        
+                    // Ubah format tanggal
+                    var rawDate = data.profile ? (data.profile.tanggal_lahir ? data.profile.tanggal_lahir : '') : '';
+                    var tanggal = new Date(rawDate).getDate();
+                    var bulan = new Date(rawDate).getMonth() +
+                        1; // Tambahkan 1 karena bulan dimulai dari 0
+                    var tahun = new Date(rawDate).getFullYear();
+
+                    var formattedDate = tanggal + " " + formatBulan(bulan) + " " + tahun;
+                    
                         modalBody.append(
                             '<div class="row">' +
                             '<div class="col-5">' +

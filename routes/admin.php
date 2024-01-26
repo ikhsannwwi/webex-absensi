@@ -9,6 +9,7 @@ use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SettingController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\LogSystemController;
+use App\Http\Controllers\admin\StatisticController;
 use App\Http\Controllers\admin\UserGroupController;
 use App\Http\Controllers\admin\SettingSmtpController;
 
@@ -41,6 +42,7 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['auth.admin'])->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('dashboard/fetchData', [DashboardController::class, 'fetchData'])->name('admin.dashboard.fetchData');
 
         //Log Systems
         Route::get('log-systems', [LogSystemController::class, 'index'])->name('admin.logSystems');
@@ -97,6 +99,15 @@ Route::prefix('admin')->group(function () {
         //Setting SMTP
         Route::get('setting-smtp', [SettingSmtpController::class, 'index'])->name('admin.settings.smtp');
         Route::put('setting-smtp/update', [SettingSmtpController::class, 'update'])->name('admin.settings.smtp.update');
+
+        //Setting
+        Route::get('settings', [SettingController::class, 'main'])->name('admin.settings');
+        Route::get('settings/admin', [SettingController::class, 'admin'])->name('admin.settings.admin');
+        Route::get('settings/frontpage', [SettingController::class, 'frontpage'])->name('admin.settings.frontpage');
+        Route::get('settings/admin/general', [SettingController::class, 'admin_general'])->name('admin.settings.admin.general');
+        Route::put('settings/admin/general/update', [SettingController::class, 'admin_general_update'])->name('admin.settings.admin.general.update');
+        Route::get('settings/admin/smtp', [SettingController::class, 'admin_smtp'])->name('admin.settings.admin.smtp');
+        Route::put('settings/admin/smtp/update', [SettingController::class, 'admin_smtp_update'])->name('admin.settings.admin.smtp.update');
 
         //Modul dan Modul Akses
         Route::get('module', [ModuleController::class, 'index'])->name('admin.module');

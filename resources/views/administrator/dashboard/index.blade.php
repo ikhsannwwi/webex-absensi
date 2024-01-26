@@ -2,10 +2,11 @@
 
 @section('content')
     <div class="page-heading">
-        <h3>Profile Statistics</h3>
+        <h3>Profile Statistics<a href="javascript:void(0)" class="btn btn-primary" style="float: right;" id="triggerRefresh"><i
+                    class="fas fa-sync-alt"></i></a></h3>
     </div>
     <div class="page-content">
-        <section class="row">
+        <section class="row" id="sectionPage">
             <div class="col-12 col-lg-9">
                 <div class="row">
                     <div class="col-6 col-lg-3 col-md-6">
@@ -18,8 +19,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                        <h6 class="text-muted font-semibold">Profile Views</h6>
-                                        <h6 class="font-extrabold mb-0">112.000</h6>
+                                        <h6 class="text-muted font-semibold">Total Visit</h6>
+                                        <h6 class="font-extrabold mb-0">{{ $Statistic->count() }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -81,7 +82,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Profile Visit</h4>
+                                <h4>Visit</h4>
                             </div>
                             <div class="card-body">
                                 <div id="chart-profile-visit"></div>
@@ -89,183 +90,120 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-xl-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Profile Visit</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <svg class="bi text-primary" width="32" height="32" fill="blue"
-                                                style="width:10px">
-                                                <use
-                                                    xlink:href="{{ asset('templateAdmin/assets/images/bootstrap-icons.svg#circle-fill') }}" />
-                                            </svg>
-                                            <h5 class="mb-0 ms-3">Europe</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <h5 class="mb-0">862</h5>
-                                    </div>
-                                    <div class="col-12">
-                                        <div id="chart-europe"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <svg class="bi text-success" width="32" height="32" fill="blue"
-                                                style="width:10px">
-                                                <use
-                                                    xlink:href="{{ asset('templateAdmin/assets/images/bootstrap-icons.svg#circle-fill') }}" />
-                                            </svg>
-                                            <h5 class="mb-0 ms-3">America</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <h5 class="mb-0">375</h5>
-                                    </div>
-                                    <div class="col-12">
-                                        <div id="chart-america"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <svg class="bi text-danger" width="32" height="32" fill="blue"
-                                                style="width:10px">
-                                                <use
-                                                    xlink:href="{{ asset('templateAdmin/assets/images/bootstrap-icons.svg#circle-fill') }}" />
-                                            </svg>
-                                            <h5 class="mb-0 ms-3">Indonesia</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <h5 class="mb-0">1025</h5>
-                                    </div>
-                                    <div class="col-12">
-                                        <div id="chart-indonesia"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-xl-8">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Latest Comments</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-lg">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Comment</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img
-                                                                src="{{ asset('templateAdmin/assets/images/faces/5.jpg') }}">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your graduation!</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img
-                                                                src="{{ asset('templateAdmin/assets/images/faces/2.jpg') }}">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Wow amazing design! Can you make another tutorial for
-                                                        this design?</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div class="col-12 col-lg-3">
                 <div class="card">
-                    <div class="card-body py-4 px-4">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar avatar-xl">
-                                <img src="{{ asset('templateAdmin/assets/images/faces/1.jpg') }}" alt="Face 1">
-                            </div>
-                            <div class="ms-3 name">
-                                <h5 class="font-bold">John Duck</h5>
-                                <h6 class="text-muted mb-0">@johnducky</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
                     <div class="card-header">
-                        <h4>Recent Messages</h4>
+                        <h4>Recent Activities</h4>
                     </div>
                     <div class="card-content pb-4">
-                        <div class="recent-message d-flex px-4 py-3">
-                            <div class="avatar avatar-lg">
-                                <img src="{{ asset('templateAdmin/assets/images/faces/4.jpg') }}">
+                        @php
+                            $counter = 0;
+                            $no = 1;
+                        @endphp
+                        @foreach ($Statistic->take(5) as $row)
+                        @php
+                            $avatar = 'templateAdmin/assets/images/faces/' . $no . '.jpg';
+                        @endphp
+                            <div class="recent-message d-flex px-4 py-3">
+                                <div class="avatar avatar-lg">
+                                    <img src="{{ asset($avatar) }}">
+                                </div>
+                                <div class="name ms-4">
+                                    @php
+                                        $no = ($no % 4) + 1;
+
+                                        $getLocation = Stevebauman\Location\Facades\Location::get($row->ip_address);
+
+                                        if ($getLocation) {
+                                            $location = $getLocation->cityName . '-' . $getLocation->countryName;
+                                        } else {
+                                            $location = $row->ip_address;
+                                        }
+
+                                    @endphp
+                                    <h5 class="mb-1">Hank Schrader</h5>
+                                    <span>{{ Carbon\Carbon::parse($row->visit_time)->diffForHumans() }}</span>
+                                    <h6 class="text-muted mb-0">Telah mengunjungi page @if ($row->url === '')
+                                            home
+                                        @else
+                                            {{ $row->url }}
+                                        @endif di browser
+                                        {{ $row->browser }} menggunakan platform {{ $row->platform }}</h6>
+                                </div>
                             </div>
-                            <div class="name ms-4">
-                                <h5 class="mb-1">Hank Schrader</h5>
-                                <h6 class="text-muted mb-0">@johnducky</h6>
-                            </div>
-                        </div>
-                        <div class="recent-message d-flex px-4 py-3">
-                            <div class="avatar avatar-lg">
-                                <img src="{{ asset('templateAdmin/assets/images/faces/5.jpg') }}">
-                            </div>
-                            <div class="name ms-4">
-                                <h5 class="mb-1">Dean Winchester</h5>
-                                <h6 class="text-muted mb-0">@imdean</h6>
-                            </div>
-                        </div>
-                        <div class="recent-message d-flex px-4 py-3">
-                            <div class="avatar avatar-lg">
-                                <img src="{{ asset('templateAdmin/assets/images/faces/1.jpg') }}">
-                            </div>
-                            <div class="name ms-4">
-                                <h5 class="mb-1">John Dodol</h5>
-                                <h6 class="text-muted mb-0">@dodoljohn</h6>
-                            </div>
-                        </div>
+                        @endforeach
+
                         <div class="px-4">
-                            <button class='btn btn-block btn-xl btn-outline-primary font-bold mt-3'>Start
-                                Conversation</button>
+                            <a href="{{route('admin.statistic')}}" class='btn btn-block btn-xl btn-outline-primary font-bold mt-3'>View All</a>
                         </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Visitors Profile</h4>
-                    </div>
-                    <div class="card-body">
-                        <div id="chart-visitors-profile"></div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
 @endsection
+
+@push('js')
+    <script src="{{ template_administrator('assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
+    {{-- <script src="{{template_administrator('assets/js/pages/dashboard.js')}}"></script> --}}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let canClick = true;
+
+            $('#triggerRefresh').on('click', function() {
+                if (canClick) {
+                    let another = this;
+                    $(another).find('.fas').addClass('fa-spin');
+
+                    $.ajax({
+                        url: "{{ route('admin.dashboard.fetchData') }}",
+                        success: function(data) {
+                            $('#sectionPage').html(data);
+                            $(another).find('.fas').removeClass('fa-spin');
+                        },
+                    });
+
+                    canClick = false;
+
+                    setTimeout(function() {
+                        canClick = true;
+                        $(another).removeClass('btn-danger');
+                    }, 60000); // 1 minute in milliseconds
+                } else {
+                    $(this).addClass('btn-danger');
+                }
+            });
+
+            var optionsProfileVisit = {
+                annotations: {
+                    position: 'back'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                chart: {
+                    type: 'bar',
+                    height: 300
+                },
+                fill: {
+                    opacity: 1
+                },
+                plotOptions: {},
+                series: [{
+                    name: 'visit',
+                    data: @json($chartDataMonthly)
+                }],
+                colors: '#435ebe',
+                xaxis: {
+                    categories: @json($chartLabelsMonthly),
+                },
+            }
+            var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"),
+                optionsProfileVisit);
+            chartProfileVisit.render();
+
+        });
+    </script>
+@endpush
