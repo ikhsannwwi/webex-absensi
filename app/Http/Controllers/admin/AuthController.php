@@ -11,12 +11,16 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     public function login(){
+        if (auth()->guard('admin')->check()) {
+            return redirect()->route('admin.dashboard')->with('warning', 'Kamu sudah login');
+        }
+        
         return view('administrator.authentication.login');
     }
 
     public function checkEmail(Request $request){
         if($request->ajax()){
-            $data = User::where('email', $request->email);
+            $data = User::where('email', $request->email)->first();
     
             if(empty($data)){
                 return response()->json([

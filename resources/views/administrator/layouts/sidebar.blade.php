@@ -1,3 +1,7 @@
+@php
+    $permissions = getPermissionModuleGroup();
+@endphp
+
 <div id="sidebar" class="active">
     <div class="sidebar-wrapper active">
         <div class="sidebar-header position-relative">
@@ -64,57 +68,83 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub {{ Route::is('admin.users*', 'admin.user_groups*') ? 'active' : '' }}">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        <span>User Management</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item {{ Route::is('admin.user_groups*') ? 'active' : '' }} ">
-                            <a href="{{ route('admin.user_groups') }}">User Groups</a>
-                        </li>
-                        <li class="submenu-item {{ Route::is('admin.users*') ? 'active' : '' }} ">
-                            <a href="{{ route('admin.users') }}">Users</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-collection-fill"></i>
-                        <span>Systems</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.logSystems') }}">Logs</a>
-                        </li>
-                    </ul>
-                </li>
+                @if (showModule('user_group', $permissions) || showModule('user', $permissions))
+                    <li
+                        class="sidebar-item  has-sub {{ Route::is('admin.users*', 'admin.user_groups*') ? 'active' : '' }}">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>User Management</span>
+                        </a>
+                        <ul class="submenu"
+                            style="display: {{ Route::is('admin.users*', 'admin.user_groups*') ? 'block' : 'none' }};">
+                            @if (showModule('user_group', $permissions))
+                                <li class="submenu-item {{ Route::is('admin.user_groups*') ? 'active' : '' }} ">
+                                    <a href="{{ route('admin.user_groups') }}">User Groups</a>
+                                </li>
+                            @endif
+                            @if (showModule('user', $permissions))
+                                <li class="submenu-item {{ Route::is('admin.users*') ? 'active' : '' }} ">
+                                    <a href="{{ route('admin.users') }}">Users</a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+                @if (showModule('log_systems', $permissions) || showModule('statistic', $permissions))
+                    <li
+                        class="sidebar-item  has-sub {{ Route::is('admin.logSystems*', 'admin.statistic*') ? 'active' : '' }}">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-collection-fill"></i>
+                            <span>Systems</span>
+                        </a>
+                        <ul class="submenu "
+                            style="display: {{ Route::is('admin.logSystems*', 'admin.statistic*') ? 'block' : 'none' }};">
+                            @if (showModule('log_systems', $permissions))
+                                <li class="submenu-item {{ Route::is('admin.logSystems*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.logSystems') }}">Logs</a>
+                                </li>
+                            @endif
+                            @if (showModule('statistic', $permissions))
+                                <li class="submenu-item {{ Route::is('admin.statistic*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.statistic') }}">Track Statistic</a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
 
                 <li class="sidebar-title">Forms &amp; Tables</li>
 
-                <li class="sidebar-item  {{ Route::is('admin.profile*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.profile', auth()->user()->kode) }}" class='sidebar-link'>
-                        <i class="bi bi-file-earmark-medical-fill"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-                <li class="sidebar-item  has-sub {{ Route::is('admin.settings*','admin.module*') ? 'active' : '' }}">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-collection-fill"></i>
-                        <span>Settings</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item {{ Route::is('admin.settings*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.settings') }}">Menu Settings</a>
-                        </li>
-                        @if (auth()->user()->email == 'dev@daysf.com')
-                        <li class="submenu-item {{ Route::is('admin.module*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.module') }}">Modul Management</a>
-                        </li>
-                        @endif
-                    </ul>
-                </li>
+                @if (showModule('profile', $permissions))
+                    <li class="sidebar-item  {{ Route::is('admin.profile*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.profile', auth()->user()->kode) }}" class='sidebar-link'>
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                @endif
+                @if (showModule('settings', $permissions) || showModule('module_management', $permissions))
+                    <li
+                        class="sidebar-item  has-sub {{ Route::is('admin.settings*', 'admin.module*') ? 'active' : '' }}">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-collection-fill"></i>
+                            <span>Settings</span>
+                        </a>
+                        <ul class="submenu "
+                            style="display: {{ Route::is('admin.settings*', 'admin.module*') ? 'block' : 'none' }};">
+                            @if (showModule('settings', $permissions))
+                                <li class="submenu-item {{ Route::is('admin.settings*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.settings') }}">Menu Settings</a>
+                                </li>
+                            @endif
+                            @if (auth()->user()->email == 'dev@daysf.com')
+                                <li class="submenu-item {{ Route::is('admin.module*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.module') }}">Modul Management</a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>

@@ -25,17 +25,17 @@
                     <a class="nav-link dropdown-toggle user-icon" href="#" id="userDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div class="avatar avatar-sm me-1">
-                            <img src="@if (auth()->user()->profile && auth()->user()->profile->foto) {{ img_src(auth()->user()->profile->foto, 'profile') }}
+                            <img src="@if ((auth()->user() ? auth()->user()->profile : '') && (auth()->user() ? auth()->user()->profile->foto : ''))) {{ auth()->user() ? img_src(auth()->user()->profile->foto, 'profile') : '' }}
             @else
                 {{ asset('templateAdmin/assets/compiled/jpg/2.jpg') }} @endif"
                                 alt="" srcset="">
 
                         </div>
-                        {{ auth()->user()->name }}
+                        {{ auth()->user() ? auth()->user()->name : '' }}
                     </a>
                     <ul class="dropdown-menu user-dropdown" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item user-text"
-                                href="{{ route('admin.profile', auth()->user()->kode) }}"><i
+                                href="{{ route('admin.profile', auth()->user() ? auth()->user()->kode : '') }}"><i
                                     class="fa fa-user-circle"></i> Profile</a></li>
                         <li><a class="dropdown-item user-text" href="{{ route('admin.settings.general') }}"><i
                                     class="fa fa-cog"></i> Settings</a></li>
