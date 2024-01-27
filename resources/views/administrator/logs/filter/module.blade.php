@@ -32,9 +32,9 @@
                 <table class="table" id="datatableModuleModal">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th width="">Identifiers</th>
-                            <th width="">Nama</th>
+                            <th width="15px">No</th>
+                            <th width="150px">Identifiers</th>
+                            <th width="100%">Nama</th>
                         </tr>
                     </thead>
                 </table>

@@ -154,17 +154,16 @@
                                 "_method": "DELETE",
                                 "id": id,
                             },
-                            success: function() {
-                                // data_table.ajax.url(
-                                //         '{{ route('admin.module.getData') }}')
-                                //     .load();
+                            success: function(response) {
                                 data_table.ajax.reload(null, false);
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.success('Data berhasil dihapus');
-
-                                // Remove the deleted row from the DataTable without reloading the page
-                                // data_table.row($(this).parents('tr')).remove().draw();
+                                toasty.success(response.message);
+                            },
+                            error: function(response) {
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.error(response.responseJSON.message);
                             }
                         });
                     }

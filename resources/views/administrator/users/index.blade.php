@@ -174,19 +174,20 @@
                                 "_method": "DELETE",
                                 "id": id,
                             },
-                            success: function() {
-                                // data_table.ajax.url(
-                                //         '{{ route('admin.users.getData') }}')
-                                //     .load();
+                            success: function(response) {
                                 data_table.ajax.reload(null, false);
-                                
+
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.success('Data berhasil dihapus');
+                                toasty.success(response.message);
+                            },
+                            error: function(response) {
+                                data_table.ajax.reload(null, false);
 
-                                // Remove the deleted row from the DataTable without reloading the page
-                                // data_table.row($(this).parents('tr')).remove().draw();
-                            }
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.success(response.responseJSON.message);
+                            },
                         });
                     }
                 });
@@ -235,14 +236,20 @@
                                 status: changeto,
 
                             }),
-                            success: function() {
+                            success: function(response) {
                                 data_table.ajax.reload(null, false);
-                                
+
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.success('Status berhasil diubah ke ' +
-                                    changeto);
-                            }
+                                toasty.success(response.message);
+                            },
+                            error: function(response) {
+                                data_table.ajax.reload(null, false);
+
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.success(response.responseJSON.message);
+                            },
                         });
 
                     } else {

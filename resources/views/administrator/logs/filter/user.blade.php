@@ -32,10 +32,10 @@
                 <table class="table" id="datatableUserModal">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th width="">User Group</th>
-                            <th width="">Nama</th>
-                            <th width="">Email</th>
+                            <th width="15px">No</th>
+                            <th width="150px">User Group</th>
+                            <th width="50%">Nama</th>
+                            <th width="50%">Email</th>
                         </tr>
                     </thead>
                 </table>

@@ -42,7 +42,7 @@
                                                     <tr>
                                                         <th style="width:50px">No</th>
                                                         <th>Module</th>
-                                                        <th>All</th>
+                                                        <th><input type="checkbox" id="checkbox-all-item"></th>
                                                         <th>Access</th>
                                                     </tr>
                                                 </thead>
@@ -74,24 +74,24 @@
                                                                 $checked = '';
                                                             
                                                                 echo '<span class="akses">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          <label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <input class="access_' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <input class="access_' .
                                                                     $index .
                                                                     '"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     type="checkbox"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     name="access[' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             type="checkbox"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             name="access[' .
                                                                     $index .
                                                                     '][module_access][' .
                                                                     $row->id .
                                                                     ']"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     value="1" ' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             value="1" ' .
                                                                     $checked .
                                                                     '>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ' .
                                                                     $row->name .
                                                                     '
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </label>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </span>';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </label>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </span>';
                                                                 $ind++;
                                                             }
                                                             ?>
@@ -137,7 +137,7 @@
                                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                             </span>
                                         </button>
-                                        <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                        <button type="reset" class="btn btn-secondary me-1 mb-1">Reset</button>
                                         <a href="{{ route('admin.user_groups') }}"
                                             class="btn btn-danger me-1 mb-1">Cancel</a>
                                     </div>
@@ -156,8 +156,7 @@
 
 
 @push('js')
-    <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-    <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
+    <script src="{{ asset_administrator('assets/plugins/parsleyjs/parsley.min.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -273,6 +272,27 @@
                 }
             }
 
+            $("#checkbox-all-item").on("click", function() {
+                var isChecked = $(this).is(':checked');
+                $(".check_all").prop('checked', isChecked);
+
+                // Declare key_all outside the if block
+                var key_all;
+
+                // If "Check All" is checked, also check individual access checkboxes
+                if (isChecked) {
+                    $(".permission-list").each(function() {
+                        key_all = $(this).find(".check_all").data('key_all');
+                        $(this).find('.access_' + key_all).prop('checked', true);
+                    });
+                } else {
+                    $(".permission-list").each(function() {
+                        key_all = $(this).find(".check_all").data('key_all');
+                        $(this).find('.access_' + key_all).prop('checked', false);
+                    });
+                }
+                checkAllItemLength()
+            });
 
 
             // Ambil semua checkbox "All"
@@ -287,6 +307,7 @@
                     } else {
                         $(that).find('.access_' + $(this).val()).prop('checked', true);
                     }
+                    checkAllItemLength()
                 });
 
                 // Event handler for individual access checkboxes
@@ -301,6 +322,7 @@
                     if (total_access != 0 && total_access == total_given_access) {
                         $(that).find('.check_all').prop('checked', true);
                     }
+                    checkAllItemLength()
                 });
 
                 total_access = $(that).find(".access_" + key_all).length;
@@ -310,6 +332,19 @@
                     $(that).find('.check_all').prop('checked', true);
                 }
             });
+            checkAllItemLength()
+
+            function checkAllItemLength() {
+                total_access = $('.permission-list').find(".check_all").length;
+                total_given_access = $('.permission-list').find(".check_all:checked").length;
+
+
+                if (total_access != 0 && total_access == total_given_access) {
+                    $('#checkbox-all-item').prop('checked', true);
+                } else {
+                    $('#checkbox-all-item').prop('checked', false);
+                }
+            }
 
         });
     </script>

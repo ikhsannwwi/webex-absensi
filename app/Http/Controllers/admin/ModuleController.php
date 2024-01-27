@@ -185,8 +185,9 @@ class ModuleController extends Controller
 
         if (!$data) {
             return response()->json([
+                'code' => 404,
                 'status' => 'error',
-                'message' => 'Pengguna tidak ditemukan'
+                'message' => 'Data tidak ditemukan'
             ], 404);
         }
 
@@ -204,9 +205,10 @@ class ModuleController extends Controller
         createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['Module' => $data, 'Module Access' => $logAccess]]);
 
         return response()->json([
+            'code' => 200,
             'status' => 'success',
-            'message' => 'Pengguna telah dihapus.',
-        ]);
+            'message' => 'Data telah dihapus.',
+        ],200);
     }
 
     

@@ -139,8 +139,7 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-    <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
+<script src="{{ asset_administrator('assets/plugins/parsleyjs/parsley.min.js') }}"></script>
 
     <!-- Tambahkan FileInput JavaScript -->
     <script src="{{ asset_administrator('assets/plugins/form-jasnyupload/fileinput.min.js') }}"></script>

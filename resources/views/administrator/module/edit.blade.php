@@ -209,7 +209,7 @@
                                                 </span>
                                             </button>
                                             <button type="reset"
-                                                class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                class="btn btn-secondary me-1 mb-1">Reset</button>
                                         </div>
                                     </div>
                             </form>
@@ -224,8 +224,7 @@
 @endsection
 
 @push('js')
-    <script src="{{ asset('templateAdmin/assets/extensions/parsleyjs/parsley.min.js') }}"></script>
-    <script src="{{ asset('templateAdmin/assets/js/pages/parsley.js') }}"></script>
+<script src="{{ asset_administrator('assets/plugins/parsleyjs/parsley.min.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {

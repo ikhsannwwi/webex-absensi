@@ -232,6 +232,7 @@ class UserController extends Controller
 
         if ($user->email == 'dev@daysf.com' && auth()->user()->email != $user->email) {
             return response()->json([
+                'code' => 403,
                 'status' => 'forbidden',
                 'message' => 'Kamu tidak memiliki akses'
             ], 403);
@@ -239,6 +240,7 @@ class UserController extends Controller
 
         if (!$user) {
             return response()->json([
+                'code' => 404,
                 'status' => 'error',
                 'message' => 'Pengguna tidak ditemukan'
             ], 404);
@@ -261,9 +263,10 @@ class UserController extends Controller
         createLog(static::$module, __FUNCTION__, $id, ['Data yang dihapus' => ['User' => $deletedData, 'User Profile' => $profile]]);
 
         return response()->json([
+            'code' => 200,
             'status' => 'success',
             'message' => 'Pengguna telah dihapus.',
-        ]);
+        ],200);
     }
 
     
@@ -294,6 +297,13 @@ class UserController extends Controller
         $log = $request->status;
         $id = $request->ix;
         $updates = User::where(["id" => $id])->first();
+        if (!$updates) {
+            return response()->json([
+                'code' => 404,
+                'status' => 'error',
+                'message' => 'Pengguna tidak ditemukan'
+            ], 404);
+        }
         // Simpan data sebelum diupdate
         $previousData = $updates->toArray();
         $updates->update($data);
@@ -301,9 +311,10 @@ class UserController extends Controller
         //Write log
         createLog(static::$module, __FUNCTION__, $id, ['Data User' => $previousData,'Statusnya diubah menjadi' => $log]);
         return response()->json([
+            'code' => 200,
             'status' => 'success',
-            'message' => 'Status telah diubah.',
-        ]);
+            'message' => 'Status telah diubah ke '. $request->status .'.',
+        ], 200);
     }
     
     public function getUserGroup(){
