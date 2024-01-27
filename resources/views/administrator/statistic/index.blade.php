@@ -2,42 +2,48 @@
 
 @section('content')
     <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-6">
-                        Statistics
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Statistic</li>
-                            </ol>
-                        </nav>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout -->
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                Statistics
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">Statistic</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-6">
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6">
+                    @include('administrator.logs.filter.main')
+                    <div class="card-body">
+                        <table class="table" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th width="15px" class="text-center">
+                                        No
+                                    </th>
+                                    <th width="50%">Ip Address</th>
+                                    <th width="50%">Page</th>
+                                    <th width="200px">Visit Time</th>
+                                    <th width="100px">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
-            @include('administrator.logs.filter.main')
-            <div class="card-body">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th width="15px" class="text-center">
-                                No
-                            </th>
-                            <th width="50%">Ip Address</th>
-                            <th width="50%">Page</th>
-                            <th width="200px">Visit Time</th>
-                            <th width="100px">Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
         </div>
+    </div>
 
-    </section>
     <!-- Basic Tables end -->
 
     @include('administrator.statistic.modal.detail')
@@ -67,7 +73,7 @@
                     type: "GET",
                 },
                 columns: [{
-                    render: function(data, type, row, meta) {
+                        render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                     },
@@ -76,7 +82,7 @@
                         name: 'ip_address'
                     },
                     {
-                        mRender : function (data, type, row, meta) {
+                        mRender: function(data, type, row, meta) {
                             let page = '';
                             if (row.url === '') {
                                 page = 'home';

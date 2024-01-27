@@ -1,102 +1,110 @@
 @extends('administrator.layouts.main')
 
 @section('content')
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                Settings
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.settings') }}">Menu Setting</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.settings.admin') }}">Admin</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Smtp</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="card-content">
-                <div class="card-body">
-                    <form action="{{ route('admin.settings.admin.smtp.update') }}" method="post"
-                        enctype="multipart/form-data" class="form" id="form" data-parsley-validate>
-                        @csrf
-                        @method('PUT')
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="hostField" class="form-label">Host</label>
-                                    <input type="text" id="hostField" class="form-control" placeholder="Masukan Host"
-                                        value="{{ array_key_exists('smtp_host_admin', $settings) ? $settings['smtp_host_admin'] : '' }}"
-                                        name="smtp_host_admin" autocomplete="off" data-parsley-required="true">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout & Basic with Icons -->
+        <div class="row">
+            <!-- Basic Layout -->
+            <div class="col-xxl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Settings
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.settings') }}">Menu Setting</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.settings.admin') }}">Admin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Smtp</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form action="{{ route('admin.settings.admin.smtp.update') }}" method="post"
+                                enctype="multipart/form-data" class="form" id="form" data-parsley-validate>
+                                @csrf
+                                @method('PUT')
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="hostField" class="form-label">Host</label>
+                                            <input type="text" id="hostField" class="form-control"
+                                                placeholder="Masukan Host"
+                                                value="{{ array_key_exists('smtp_host_admin', $settings) ? $settings['smtp_host_admin'] : '' }}"
+                                                name="smtp_host_admin" autocomplete="off" data-parsley-required="true">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="securityField" class="form-label">Security</label>
-                                    <input type="text" id="securityField" class="form-control"
-                                        placeholder="Masukan Security"
-                                        value="{{ array_key_exists('smtp_security_admin', $settings) ? $settings['smtp_security_admin'] : '' }}"
-                                        name="smtp_security_admin" autocomplete="off" data-parsley-required="true">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="securityField" class="form-label">Security</label>
+                                            <input type="text" id="securityField" class="form-control"
+                                                placeholder="Masukan Security"
+                                                value="{{ array_key_exists('smtp_security_admin', $settings) ? $settings['smtp_security_admin'] : '' }}"
+                                                name="smtp_security_admin" autocomplete="off" data-parsley-required="true">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="portField" class="form-label">Port</label>
-                                    <input type="text" id="portField" class="form-control" placeholder="Masukan Port"
-                                        value="{{ array_key_exists('smtp_port_admin', $settings) ? $settings['smtp_port_admin'] : '' }}"
-                                        name="smtp_port_admin" autocomplete="off" data-parsley-required="true">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="portField" class="form-label">Port</label>
+                                            <input type="text" id="portField" class="form-control"
+                                                placeholder="Masukan Port"
+                                                value="{{ array_key_exists('smtp_port_admin', $settings) ? $settings['smtp_port_admin'] : '' }}"
+                                                name="smtp_port_admin" autocomplete="off" data-parsley-required="true">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="userField" class="form-label">User</label>
-                                    <input type="text" id="userField" class="form-control" placeholder="Masukan User"
-                                        value="{{ array_key_exists('smtp_user_admin', $settings) ? $settings['smtp_user_admin'] : '' }}"
-                                        name="smtp_user_admin" autocomplete="off" data-parsley-required="true">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="userField" class="form-label">User</label>
+                                            <input type="text" id="userField" class="form-control"
+                                                placeholder="Masukan User"
+                                                value="{{ array_key_exists('smtp_user_admin', $settings) ? $settings['smtp_user_admin'] : '' }}"
+                                                name="smtp_user_admin" autocomplete="off" data-parsley-required="true">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="passwordField" class="form-label">Password</label>
-                                    <input type="text" id="passwordField" class="form-control"
-                                        placeholder="Masukan Password"
-                                        value="{{ array_key_exists('smtp_password_admin', $settings) ? $settings['smtp_password_admin'] : '' }}"
-                                        name="smtp_password_admin" autocomplete="off" data-parsley-required="true">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="passwordField" class="form-label">Password</label>
+                                            <input type="text" id="passwordField" class="form-control"
+                                                placeholder="Masukan Password"
+                                                value="{{ array_key_exists('smtp_password_admin', $settings) ? $settings['smtp_password_admin'] : '' }}"
+                                                name="smtp_password_admin" autocomplete="off" data-parsley-required="true">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" id="formSubmit" class="btn btn-primary mx-1 mb-1">
-                                    <span class="indicator-label">Submit</span>
-                                    <span class="indicator-progress" style="display: none;">
-                                        Tunggu Sebentar...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                    </span>
-                                </button>
-                                <button type="reset" class="btn btn-secondary mx-1 mb-1">Reset</button>
-                                <a href="{{ route('admin.settings.admin') }}" class="btn btn-danger mx-1 mb-1">Cancel</a>
-                            </div>
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" id="formSubmit" class="btn btn-primary mx-1 mb-1">
+                                            <span class="indicator-label">Submit</span>
+                                            <span class="indicator-progress" style="display: none;">
+                                                Tunggu Sebentar...
+                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                        <button type="reset" class="btn btn-secondary mx-1 mb-1">Reset</button>
+                                        <a href="{{ route('admin.settings.admin') }}"
+                                            class="btn btn-danger mx-1 mb-1">Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-
-    </section>
+    </div>
 @endsection
 @push('js')
     <script type="text/javascript">

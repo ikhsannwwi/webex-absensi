@@ -21,7 +21,7 @@ function asset_frontpage($url)
 
 function template_administrator($url)
 {
-	return asset('templateAdmin/' . $url);
+	return asset('templateSneat/' . $url);
 }
 
 function upload_path($type = '', $file = '')

@@ -2,49 +2,56 @@
 
 @section('content')
     <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-6">
-                        Users
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">User</li>
-                            </ol>
-                        </nav>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout -->
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                Users
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">User</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-6">
+                                @if (isallowed('user', 'add'))
+                                    <a href="{{ route('admin.users.add') }}" class="btn btn-primary me-3 float-end">Tambah
+                                        Data</a>
+                                @endif
+                                @if (isallowed('user', 'arsip'))
+                                    <a href="{{ route('admin.users.arsip') }}"
+                                        class="btn btn-primary mx-3 float-end">Arsip</a>
+                                @endif
+                                <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        @if (isallowed('user', 'add'))
-                            <a href="{{ route('admin.users.add') }}" class="btn btn-primary me-3 float-end">Tambah
-                                Data</a>
-                        @endif
-                        @if (isallowed('user', 'arsip'))
-                            <a href="{{ route('admin.users.arsip') }}" class="btn btn-primary mx-3 float-end">Arsip</a>
-                        @endif
-                        <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                    @include('administrator.users.filter.main')
+                    <div class="card-body">
+                        <table class="table" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th width="15px">No</th>
+                                    <th width="200px">User Group</th>
+                                    <th width="50%">Nama</th>
+                                    <th width="50%">Email</th>
+                                    <th width="150px">Status</th>
+                                    <th width="225px">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
-            @include('administrator.users.filter.main')
-            <div class="card-body">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th width="15px">No</th>
-                            <th width="200px">User Group</th>
-                            <th width="50%">Nama</th>
-                            <th width="50%">Email</th>
-                            <th width="150px">Status</th>
-                            <th width="225px">Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
         </div>
+    </div>
 
-    </section>
     <!-- Basic Tables end -->
 
     @include('administrator.users.modal.detail')
@@ -206,7 +213,8 @@
                                 data_table.ajax.reload(null, false);
                                 swalWithBootstrapButtons.fire({
                                     title: 'Berhasil!',
-                                    text: 'Status berhasil diubah ke ' + changeto,
+                                    text: 'Status berhasil diubah ke ' +
+                                        changeto,
                                     icon: 'success',
                                     timer: 1500, // 2 detik
                                     showConfirmButton: false

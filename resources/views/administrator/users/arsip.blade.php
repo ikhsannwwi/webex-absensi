@@ -2,43 +2,49 @@
 
 @section('content')
     <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-6">
-                        Arsip Users
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.users') }}">Users</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Arsip</li>
-                            </ol>
-                        </nav>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout -->
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                Arsip Users
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.users') }}">Users</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Arsip</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-6">
+                                <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                    @include('administrator.users.filter.main')
+                    <div class="card-body">
+                        <table class="table" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th width="15px">No</th>
+                                    <th width="200px">User Group</th>
+                                    <th width="50%">Nama</th>
+                                    <th width="50%">Email</th>
+                                    <th width="150px">Status</th>
+                                    <th width="225px">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
-            @include('administrator.users.filter.main')
-            <div class="card-body">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th width="15px">No</th>
-                            <th width="200px">User Group</th>
-                            <th width="50%">Nama</th>
-                            <th width="50%">Email</th>
-                            <th width="150px">Status</th>
-                            <th width="225px">Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
         </div>
+    </div>
 
-    </section>
     <!-- Basic Tables end -->
 
     @include('administrator.users.modal.detail')
@@ -151,7 +157,7 @@
                     }
                 });
             });
-            
+
             $(document).on('click', '.restore', function(event) {
                 var id = $(this).data('id');
                 const swalWithBootstrapButtons = Swal.mixin({
@@ -273,10 +279,10 @@
 
 
             optionUserGroup.html(
-                '<option id="loadingSpinner" style="display: none;">'+
-                    '<i class="fas fa-spinner fa-spin">'+
-                        '</i> Sedang memuat...</option>'
-                );
+                '<option id="loadingSpinner" style="display: none;">' +
+                '<i class="fas fa-spinner fa-spin">' +
+                '</i> Sedang memuat...</option>'
+            );
 
             var loadingSpinner = $('#loadingSpinner');
 
@@ -308,7 +314,7 @@
                     console.error('Gagal memuat data User Group.');
                     optionUserGroup.html('<option>Gagal memuat data</option>')
                     loadingSpinner
-                .hide(); // Hide the loading spinner even if there's an error
+                        .hide(); // Hide the loading spinner even if there's an error
                 }
             });
 

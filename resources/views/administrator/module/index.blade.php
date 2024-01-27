@@ -1,45 +1,50 @@
 @extends('administrator.layouts.main')
 
 @section('content')
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-6">
-                        Modules
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Module</li>
-                            </ol>
-                        </nav>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout -->
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                Modules
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">Module</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-6">
+                                @if (isallowed('module_management', 'add'))
+                                    <a href="{{ route('admin.module.add') }}" class="btn btn-primary mx-3 float-end">Tambah
+                                        Data</a>
+                                @endif
+                                {{-- <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a> --}}
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        @if (isallowed('module_management', 'add'))
-                            <a href="{{ route('admin.module.add') }}" class="btn btn-primary mx-3 float-end">Tambah
-                                Data</a>
-                        @endif
-                        {{-- <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a> --}}
+                    {{-- @include('administrator.module.filter.main') --}}
+                    <div class="card-body">
+                        <table class="table" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th width="15px">No</th>
+                                    <th width="50%">Nama</th>
+                                    <th width="50%">Identifier</th>
+                                    <th width="225px">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
-            {{-- @include('administrator.module.filter.main') --}}
-            <div class="card-body">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th width="15px">No</th>
-                            <th width="50%">Nama</th>
-                            <th width="50%">Identifier</th>
-                            <th width="225px">Action</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
         </div>
+    </div>
 
-    </section>
     <!-- Basic Tables end -->
 
     @include('administrator.module.modal.detail')

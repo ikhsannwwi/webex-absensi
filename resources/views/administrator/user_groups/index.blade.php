@@ -2,45 +2,52 @@
 
 @section('content')
     <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-6">
-                        User Groups
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                {{-- <li class="breadcrumb-item"><a href="#">Library</a></li> --}}
-                                <li class="breadcrumb-item active" aria-current="page">User Group</li>
-                            </ol>
-                        </nav>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout -->
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                User Groups
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                        </li>
+                                        {{-- <li class="breadcrumb-item"><a href="#">Library</a></li> --}}
+                                        <li class="breadcrumb-item active" aria-current="page">User Group</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-6">
+                                @if (isallowed('user_group', 'add'))
+                                    <a href="{{ route('admin.user_groups.add') }}"
+                                        class="btn btn-primary mx-3 float-end">Tambah
+                                        Data</a>
+                                @endif
+                                <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                            </div>
+                        </div>
+                        @include('administrator.user_groups.filter.main')
                     </div>
-                    <div class="col-6">
-                        @if (isallowed('user_group','add'))
-                        <a href="{{ route('admin.user_groups.add') }}" class="btn btn-primary mx-3 float-end">Tambah
-                            Data</a>
-                        @endif
-                        <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                    <div class="card-body">
+                        <table class="table" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th width="15px">No</th>
+                                    <th width="100%">Nama</th>
+                                    <th width="150px">Status</th>
+                                    <th width="225px">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
-                @include('administrator.user_groups.filter.main')
-            </div>
-            <div class="card-body">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th width="15px">No</th>
-                            <th width="100%">Nama</th>
-                            <th width="150px">Status</th>
-                            <th width="225px">Action</th>
-                        </tr>
-                    </thead>
-                </table>
             </div>
         </div>
+    </div>
 
-    </section>
     <!-- Basic Tables end -->
 
     @include('administrator.user_groups.modal.detail')
@@ -193,7 +200,8 @@
                                 data_table.ajax.reload(null, false);
                                 swalWithBootstrapButtons.fire({
                                     title: 'Berhasil!',
-                                    text: 'Status berhasil diubah ke ' + changeto,
+                                    text: 'Status berhasil diubah ke ' +
+                                        changeto,
                                     icon: 'success',
                                     timer: 1500, // 2 detik
                                     showConfirmButton: false
@@ -223,7 +231,7 @@
 
                 // Update the DataTable with the filtered data
                 data_table.ajax.url('{{ route('admin.user_groups.getData') }}?status=' + filterStatus)
-                .load();
+                    .load();
             });
 
             function getStatus() {

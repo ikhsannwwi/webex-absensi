@@ -1,57 +1,63 @@
 @extends('administrator.layouts.main')
 
 @section('content')
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-6">
-                        Log Systems
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Log System</li>
-                            </ol>
-                        </nav>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout -->
+        <div class="row">
+            <div class="col-xl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-6">
+                                Log Systems
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                        </li>
+                                        <li class="breadcrumb-item active" aria-current="page">Log System</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                            <div class="col-6">
+                                @if (isallowed('log_system', 'clear'))
+                                    <a href="javascript:void(0)" class="btn btn-danger mx-3 float-end clear">
+                                        <span class="indicator-label-kode">Clear Logs</span>
+                                        <span class="indicator-progress-kode" style="display: none;">
+                                            <div class="d-flex">
+                                                <span
+                                                    class="spinner-border spinner-border-sm align-middle ms-2 mt-1"></span>
+                                            </div>
+                                        </span>
+                                    </a>
+                                @endif
+                                @if (isallowed('log_system', 'export'))
+                                    <a href="{{ route('admin.logSystems.generatePDF') }}" target="_blank"
+                                        class="btn btn-primary ms-3 float-end">
+                                        Export
+                                    </a>
+                                @endif
+                                <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        @if (isallowed('log_system', 'clear'))
-                            <a href="javascript:void(0)" class="btn btn-danger mx-3 float-end clear">
-                                <span class="indicator-label-kode">Clear Logs</span>
-                                <span class="indicator-progress-kode" style="display: none;">
-                                    <div class="d-flex">
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2 mt-1"></span>
-                                    </div>
-                                </span>
-                            </a>
-                        @endif
-                        @if (isallowed('log_system', 'export'))
-                            <a href="{{route('admin.logSystems.generatePDF')}}" target="_blank" class="btn btn-primary ms-3 float-end">
-                                Export
-                            </a>
-                        @endif
-                        <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
+                    @include('administrator.logs.filter.main')
+                    <div class="card-body">
+                        <table class="table" id="datatable">
+                            <thead>
+                                <tr>
+                                    <th width="15px">No</th>
+                                    <th width="100%">User</th>
+                                    <th width="200px">Module</th>
+                                    <th width="200px">Action</th>
+                                    <th width="200px">Tanggal</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
-            @include('administrator.logs.filter.main')
-            <div class="card-body">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th width="15px">No</th>
-                            <th width="100%">User</th>
-                            <th width="200px">Module</th>
-                            <th width="200px">Action</th>
-                            <th width="200px">Tanggal</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
         </div>
-
-    </section>
+    </div>
     <!-- Basic Tables end -->
 
     @include('administrator.logs.modal.detail')

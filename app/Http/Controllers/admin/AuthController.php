@@ -79,7 +79,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             // Jika autentikasi berhasil, alihkan ke halaman yang sesuai
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.dashboard')->with('success', 'Berhasil login');
         }
 
         // Jika autentikasi gagal, alihkan kembali ke halaman masuk dengan pesan error
@@ -89,6 +89,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
+        return redirect()->route('admin.login')->with('warning', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
     }
 }

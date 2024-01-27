@@ -1,131 +1,140 @@
 @extends('administrator.layouts.main')
 
 @section('content')
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                Settings
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.settings') }}">Menu Setting</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('admin.settings.admin') }}">Admin</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">General</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="card-content">
-                <div class="card-body">
-                    <form action="{{ route('admin.settings.admin.general.update') }}" method="post" enctype="multipart/form-data"
-                        class="form" id="form" data-parsley-validate>
-                        @csrf
-                        @method('PUT')
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="namaAppField" class="form-label">Nama App</label>
-                                    <input type="text" id="namaAppField" class="form-control"
-                                        placeholder="Masukan Nama App"
-                                        value="{{ array_key_exists('nama_app_admin', $settings) ? $settings['nama_app_admin'] : '' }}"
-                                        name="nama_app_admin" autocomplete="off" data-parsley-required="true">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="footerAppAdmin" class="form-label">Footer App Admin</label>
-                                    <input type="text" id="footerAppAdmin" class="form-control"
-                                        placeholder="Masukan Footer App Admin"
-                                        value="{{ array_key_exists('footer_app_admin', $settings) ? $settings['footer_app_admin'] : '' }}"
-                                        name="footer_app_admin" autocomplete="off" data-parsley-required="true">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="logoAppAdminInputFile" class="form-label">Logo App Admin</label>
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
-                                            <img width="200px"
-                                                src="{{ array_key_exists('logo_app_admin', $settings) ? img_src($settings['logo_app_admin'], 'settings') : '' }}">
-                                        </div>
-                                        <div class="mt-3">
-                                            <label for="logoAppAdminInputFile" class="btn btn-light btn-file">
-                                                <span class="fileinput-new">Select image</span>
-                                                <input type="file" class="d-none" id="logoAppAdminInputFile"
-                                                    name="logo_app_admin">
-                                            </label>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Layout & Basic with Icons -->
+        <div class="row">
+            <!-- Basic Layout -->
+            <div class="col-xxl">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Settings
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.settings') }}">Menu Setting</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.settings.admin') }}">Admin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">General</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form action="{{ route('admin.settings.admin.general.update') }}" method="post"
+                                enctype="multipart/form-data" class="form" id="form" data-parsley-validate>
+                                @csrf
+                                @method('PUT')
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="namaAppField" class="form-label">Nama App</label>
+                                            <input type="text" id="namaAppField" class="form-control"
+                                                placeholder="Masukan Nama App"
+                                                value="{{ array_key_exists('nama_app_admin', $settings) ? $settings['nama_app_admin'] : '' }}"
+                                                name="nama_app_admin" autocomplete="off" data-parsley-required="true">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="faviconInputFile" class="form-label">Favicon</label>
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
-                                            <img width="200px"
-                                                src="{{ array_key_exists('favicon', $settings) ? img_src($settings['favicon'], 'settings') : '' }}">
-                                        </div>
-                                        <div class="mt-3">
-                                            <label for="faviconInputFile" class="btn btn-light btn-file">
-                                                <span class="fileinput-new">Select image</span>
-                                                <input type="file" class="d-none" id="faviconInputFile" name="favicon">
-                                            </label>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="footerAppAdmin" class="form-label">Footer App Admin</label>
+                                            <input type="text" id="footerAppAdmin" class="form-control"
+                                                placeholder="Masukan Footer App Admin"
+                                                value="{{ array_key_exists('footer_app_admin', $settings) ? $settings['footer_app_admin'] : '' }}"
+                                                name="footer_app_admin" autocomplete="off" data-parsley-required="true">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-12">
-                                <div class="form-group mandatory">
-                                    <label for="backgroundLoginPanelAdminInputFile" class="form-label">Background Login
-                                        Panel Admin</label>
-                                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                                        <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
-                                            <img width="200px"
-                                                src="{{ array_key_exists('background_login_panel_admin', $settings) ? img_src($settings['background_login_panel_admin'], 'settings') : '' }}">
-                                        </div>
-                                        <div class="mt-3">
-                                            <label for="backgroundLoginPanelAdminInputFile" class="btn btn-light btn-file">
-                                                <span class="fileinput-new">Select image</span>
-                                                <input type="file" class="d-none" id="backgroundLoginPanelAdminInputFile"
-                                                    name="background_login_panel_admin">
-                                            </label>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="logoAppAdminInputFile" class="form-label">Logo App Admin</label>
+                                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
+                                                    <img width="200px"
+                                                        src="{{ array_key_exists('logo_app_admin', $settings) ? img_src($settings['logo_app_admin'], 'settings') : '' }}">
+                                                </div>
+                                                <div class="mt-3">
+                                                    <label for="logoAppAdminInputFile" class="btn btn-light btn-file">
+                                                        <span class="fileinput-new">Select image</span>
+                                                        <input type="file" class="d-none" id="logoAppAdminInputFile"
+                                                            name="logo_app_admin">
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" id="formSubmit" class="btn btn-primary me-1 mb-1">
-                                    <span class="indicator-label">Submit</span>
-                                    <span class="indicator-progress" style="display: none;">
-                                        Tunggu Sebentar...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                    </span>
-                                </button>
-                                <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="faviconInputFile" class="form-label">Favicon</label>
+                                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
+                                                    <img width="200px"
+                                                        src="{{ array_key_exists('favicon', $settings) ? img_src($settings['favicon'], 'settings') : '' }}">
+                                                </div>
+                                                <div class="mt-3">
+                                                    <label for="faviconInputFile" class="btn btn-light btn-file">
+                                                        <span class="fileinput-new">Select image</span>
+                                                        <input type="file" class="d-none" id="faviconInputFile"
+                                                            name="favicon">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="backgroundLoginPanelAdminInputFile" class="form-label">Background
+                                                Login
+                                                Panel Admin</label>
+                                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                <div class="fileinput-preview thumbnail mb20" data-trigger="fileinput">
+                                                    <img width="200px"
+                                                        src="{{ array_key_exists('background_login_panel_admin', $settings) ? img_src($settings['background_login_panel_admin'], 'settings') : '' }}">
+                                                </div>
+                                                <div class="mt-3">
+                                                    <label for="backgroundLoginPanelAdminInputFile"
+                                                        class="btn btn-light btn-file">
+                                                        <span class="fileinput-new">Select image</span>
+                                                        <input type="file" class="d-none"
+                                                            id="backgroundLoginPanelAdminInputFile"
+                                                            name="background_login_panel_admin">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" id="formSubmit" class="btn btn-primary me-1 mb-1">
+                                            <span class="indicator-label">Submit</span>
+                                            <span class="indicator-progress" style="display: none;">
+                                                Tunggu Sebentar...
+                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                            </span>
+                                        </button>
+                                        <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </section>
     <!-- Basic Tables end -->
 @endsection
 
