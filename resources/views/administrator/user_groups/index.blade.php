@@ -223,13 +223,20 @@
                                 status: changeto,
 
                             }),
-                            success: function() {
+                            success: function(response) {
                                 data_table.ajax.reload(null, false);
+
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.success('Status berhasil diubah ke ' +
-                                    changeto);
-                            }
+                                toasty.success(response.message);
+                            },
+                            error: function(response) {
+                                data_table.ajax.reload(null, false);
+
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.success(response.responseJSON.message);
+                            },
                         });
 
                     } else {

@@ -206,25 +206,23 @@
                                 "_token": "{{ csrf_token() }}",
                                 "_method": "GET",
                             },
-                            success: function() {
-                                // Menyembunyikan spinner dan mengembalikan label
+                            success: function(response) {
                                 progress.hide();
                                 label.text('Clear Logs');
-
                                 data_table.ajax.reload(null, false);
 
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.success('Data log yang lebih lama dari 7 hari berhasil dihapus');
+                                toasty.success(response.message);
                             },
-                            error: function() {
-                                // Menyembunyikan spinner dan mengembalikan label jika terjadi kesalahan
+                            error: function(response) {
                                 progress.hide();
                                 label.text('Clear Logs');
+
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.error('Terjadi kesalahan saat menghapus data');
-                            }
+                                toasty.success(response.responseJSON.message);
+                            },
                         });
                     }
                 });

@@ -45,7 +45,7 @@
         </li>
         <li class="menu-item {{ Route::is('admin.users*', 'admin.user_groups*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <i class='menu-icon tf-icons bx bxs-user-detail'></i>
                 <div data-i18n="User Management">User Management</div>
             </a>
             <ul class="menu-sub">
@@ -63,7 +63,7 @@
         </li>
         <li class="menu-item {{ Route::is('admin.logSystems*', 'admin.statistic*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                <i class='menu-icon tf-icons bx bx-server'></i>
                 <div data-i18n="Systems">Systems</div>
             </a>
             <ul class="menu-sub">
@@ -81,7 +81,7 @@
         </li>
         <li class="menu-item {{ Route::is('admin.settings*', 'admin.module*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
+                <i class='menu-icon tf-icons bx bx-cog'></i>
                 <div data-i18n="Settings">Settings</div>
             </a>
             <ul class="menu-sub">

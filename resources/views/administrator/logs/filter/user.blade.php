@@ -79,7 +79,34 @@
             }
         }
 
+        var optionToast = {
+            classname: "toast",
+            transition: "fade",
+            insertBefore: true,
+            duration: 4000,
+            enableSounds: true,
+            autoClose: true,
+            progressBar: true,
+            sounds: {
+                info: toastMessages.path + "/sounds/info/1.mp3",
+                // path to sound for successfull message:
+                success: toastMessages.path + "/sounds/success/1.mp3",
+                // path to sound for warn message:
+                warning: toastMessages.path + "/sounds/warning/1.mp3",
+                // path to sound for error message:
+                error: toastMessages.path + "/sounds/error/1.mp3",
+            },
 
+            onShow: function(type) {
+                console.log("a toast " + type + " message is shown!");
+            },
+            onHide: function(type) {
+                console.log("the toast " + type + " message is hidden!");
+            },
+
+            // the placement where prepend the toast container:
+            prependTo: document.body.childNodes[0],
+        };
 
         $('#filterUserLogSystem').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
@@ -157,22 +184,10 @@
                     // Close the modal
                     $('#buttonCloseUserLogSystem').click();
                 } else {
-                    // Handle the case where no row is selected
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success mx-4',
-                            cancelButton: 'btn btn-danger'
-                        },
-                        buttonsStyling: false
-                    });
-
-                    swalWithBootstrapButtons.fire({
-                        title: 'Failed!',
-                        text: 'Please select a row first.',
-                        icon: 'error',
-                        // timer: 1500, // 2 detik
-                        showConfirmButton: true
-                    });
+                    $('#buttonCloseUserLogSystem').click();
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Pilih salah satu');
                 }
             });
             // end click di tombol Pilih User

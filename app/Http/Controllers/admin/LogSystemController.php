@@ -95,9 +95,17 @@ class LogSystemController extends Controller
             // Hapus data log yang lebih lama dari 7 hari kebelakang
             Log::where('created_at', '<', $DaysAgo)->delete();
 
-            return redirect()->route('admin.logSystems')->with('success', 'Data log yang lebih lama dari 7 hari berhasil dihapus.');
+            return response()->json([
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'Log yang sudah 7 hari lebih sukses dibersihkan',
+            ], 200);
         } catch (\Exception $e) {
-            return redirect()->route('admin.logSystems')->with('error', 'Terjadi kesalahan saat menghapus data log: ' . $e->getMessage());
+            return response()->json([
+                'code' => 500,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 

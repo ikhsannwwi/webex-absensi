@@ -127,6 +127,35 @@
                 },
             });
 
+            var optionToast = {
+                classname: "toast",
+                transition: "fade",
+                insertBefore: true,
+                duration: 4000,
+                enableSounds: true,
+                autoClose: true,
+                progressBar: true,
+                sounds: {
+                    info: toastMessages.path + "/sounds/info/1.mp3",
+                    // path to sound for successfull message:
+                    success: toastMessages.path + "/sounds/success/1.mp3",
+                    // path to sound for warn message:
+                    warning: toastMessages.path + "/sounds/warning/1.mp3",
+                    // path to sound for error message:
+                    error: toastMessages.path + "/sounds/error/1.mp3",
+                },
+
+                onShow: function(type) {
+                    console.log("a toast " + type + " message is shown!");
+                },
+                onHide: function(type) {
+                    console.log("the toast " + type + " message is hidden!");
+                },
+
+                // the placement where prepend the toast container:
+                prependTo: document.body.childNodes[0],
+            };
+
             // click di baris tabel module
             $('#datatableModuleModal tbody').on('click', 'tr', function() {
                 // Remove the 'selected' class from all rows
@@ -142,32 +171,21 @@
             $('#selectData-Module').on('click', function() {
                 // Get the selected row data
                 var selectedRowData = data_table_module.rows('.selected').data()[0];
-
                 // Check if any row is selected
                 if (selectedRowData) {
                     // Use the selected row data
                     $("#inputModule").val(selectedRowData.identifiers);
                     $("#inputModuleName").val(selectedRowData.name);
 
+                    console.log(selectedRowData)
                     // Close the modal
                     $('#buttonCloseModuleModal').click();
                 } else {
-                    // Handle the case where no row is selected
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success mx-4',
-                            cancelButton: 'btn btn-danger'
-                        },
-                        buttonsStyling: false
-                    });
-
-                    swalWithBootstrapButtons.fire({
-                        title: 'Failed!',
-                        text: 'Please select a row first.',
-                        icon: 'error',
-                        // timer: 1500, // 2 detik
-                        showConfirmButton: true
-                    });
+                    console.log(selectedRowData)
+                    $('#buttonCloseModuleModal').click();
+                    var toasty = new Toasty(optionToast);
+                    toasty.configure(optionToast);
+                    toasty.error('Pilih salah satu');
                 }
             });
             // end click di tombol Pilih Module

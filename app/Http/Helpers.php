@@ -105,6 +105,10 @@ function isAllowed($modul, $modul_akses)
 		return TRUE;
 	} else {
 		$group = UserGroup::find($grup_pengguna_id);
+
+		if (!$group) {
+			return false;
+		}
         
         if ($group->status == 1) {
             $permission = getPermissionGroup($grup_pengguna_id);

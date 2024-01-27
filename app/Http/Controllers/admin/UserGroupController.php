@@ -304,6 +304,13 @@ class UserGroupController extends Controller
         $log = $request->status;
         $id = $request->ix;
         $user_group = UserGroup::where(["id" => $id])->first();
+        if (!$user_group) {
+            return response()->json([
+                'code' => 404,
+                'status' => 'error',
+                'message' => 'Pengguna tidak ditemukan'
+            ], 404);
+        }
         $user_group->update($data);
 
 
@@ -312,7 +319,11 @@ class UserGroupController extends Controller
 
         //Write log
         createLog(static::$module, __FUNCTION__, $id,['User Group' => $user_group, 'Statusnya diubah menjadi' => $log]);
-        return response()->json(['success' => 'Status telah diubah.']);
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Status telah diubah ke '. $request->status .'.',
+        ], 200);
     }
 
     public function checkName(Request $request){
