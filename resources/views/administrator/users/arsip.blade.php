@@ -34,7 +34,6 @@
                                     <th width="200px">User Group</th>
                                     <th width="50%">Nama</th>
                                     <th width="50%">Email</th>
-                                    <th width="150px">Status</th>
                                     <th width="225px">Action</th>
                                 </tr>
                             </thead>
@@ -96,10 +95,6 @@
                         name: 'email'
                     },
                     {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
                         data: 'action',
                         name: 'action',
                         searchable: false,
@@ -107,6 +102,35 @@
                     }
                 ],
             });
+
+            var optionToast = {
+                classname: "toast",
+                transition: "fade",
+                insertBefore: true,
+                duration: 4000,
+                enableSounds: true,
+                autoClose: true,
+                progressBar: true,
+                sounds: {
+                    info: toastMessages.path + "/sounds/info/1.mp3",
+                    // path to sound for successfull message:
+                    success: toastMessages.path + "/sounds/success/1.mp3",
+                    // path to sound for warn message:
+                    warning: toastMessages.path + "/sounds/warning/1.mp3",
+                    // path to sound for error message:
+                    error: toastMessages.path + "/sounds/error/1.mp3",
+                },
+
+                onShow: function(type) {
+                    console.log("a toast " + type + " message is shown!");
+                },
+                onHide: function(type) {
+                    console.log("the toast " + type + " message is hidden!");
+                },
+
+                // the placement where prepend the toast container:
+                prependTo: document.body.childNodes[0],
+            };
 
 
             $(document).on('click', '.delete', function(event) {
@@ -142,13 +166,10 @@
                                 //         '{{ route('admin.users.getData') }}')
                                 //     .load();
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire({
-                                    title: 'Berhasil!',
-                                    text: 'Data berhasil dihapus secara permanent.',
-                                    icon: 'success',
-                                    timer: 1500, // 2 detik
-                                    showConfirmButton: false
-                                });
+
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.success('Data berhasil dihapus secara permanent');
 
                                 // Remove the deleted row from the DataTable without reloading the page
                                 // data_table.row($(this).parents('tr')).remove().draw();
@@ -191,81 +212,15 @@
                                 //         '{{ route('admin.users.getData') }}')
                                 //     .load();
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire({
-                                    title: 'Berhasil!',
-                                    text: 'Data berhasil dipulihkan.',
-                                    icon: 'success',
-                                    timer: 1500, // 2 detik
-                                    showConfirmButton: false
-                                });
+
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.success('Data berhasil dipulihkan');
 
                                 // Remove the PUT row from the DataTable without reloading the page
                                 // data_table.row($(this).parents('tr')).remove().draw();
                             }
                         });
-                    }
-                });
-            });
-
-
-            //Change Status Confirmation
-            $(document).on('click', '.changeStatus', function(event) {
-                var ix = $(this).data('ix');
-                if ($(this).is(':checked')) {
-                    var status = "Tidak Aktif";
-                    var changeto = "Aktif";
-                    var message = "";
-                } else {
-                    var status = "Aktif"
-                    var changeto = "Tidak Aktif";
-                    var message = "";
-                }
-
-                var id = $(this).data('id');
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success mx-4',
-                        cancelButton: 'btn btn-danger'
-                    },
-                    buttonsStyling: false
-                });
-
-                swalWithBootstrapButtons.fire({
-                    html: 'Apakah anda yakin ingin mengubah status ke ' + changeto + '?' + message,
-                    icon: "info",
-                    buttonsStyling: false,
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, saya yakin!",
-                    cancelButtonText: 'Tidak, batalkan',
-                    reverseButtons: true
-
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('admin.users.changeStatus') }}",
-                            data: ({
-                                "_token": "{{ csrf_token() }}",
-                                ix: ix,
-                                status: changeto,
-
-                            }),
-                            success: function() {
-                                data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Status berhasil diubah ke ' + changeto,
-                                    'success'
-                                );
-                            }
-                        });
-
-                    } else {
-                        if (status == "Aktif") {
-                            $(this).prop("checked", true);
-                        } else {
-                            $(this).prop("checked", false);
-                        }
                     }
                 });
             });

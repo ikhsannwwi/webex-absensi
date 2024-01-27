@@ -143,6 +143,35 @@
                 return $("#inputModule").val();
             }
 
+            var optionToast = {
+                classname: "toast",
+                transition: "fade",
+                insertBefore: true,
+                duration: 4000,
+                enableSounds: true,
+                autoClose: true,
+                progressBar: true,
+                sounds: {
+                    info: toastMessages.path + "/sounds/info/1.mp3",
+                    // path to sound for successfull message:
+                    success: toastMessages.path + "/sounds/success/1.mp3",
+                    // path to sound for warn message:
+                    warning: toastMessages.path + "/sounds/warning/1.mp3",
+                    // path to sound for error message:
+                    error: toastMessages.path + "/sounds/error/1.mp3",
+                },
+
+                onShow: function(type) {
+                    console.log("a toast " + type + " message is shown!");
+                },
+                onHide: function(type) {
+                    console.log("the toast " + type + " message is hidden!");
+                },
+
+                // the placement where prepend the toast container:
+                prependTo: document.body.childNodes[0],
+            };
+
             $(document).on('click', '.clear', function(event) {
                 const button = $(this);
                 const label = button.find('.indicator-label-kode');
@@ -183,22 +212,18 @@
                                 label.text('Clear Logs');
 
                                 data_table.ajax.reload(null, false);
-                                swalWithBootstrapButtons.fire(
-                                    'Berhasil!',
-                                    'Data log yang lebih lama dari 7 hari berhasil dihapus.',
-                                    'success'
-                                );
+
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.success('Data log yang lebih lama dari 7 hari berhasil dihapus');
                             },
                             error: function() {
                                 // Menyembunyikan spinner dan mengembalikan label jika terjadi kesalahan
                                 progress.hide();
                                 label.text('Clear Logs');
-
-                                swalWithBootstrapButtons.fire(
-                                    'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data.',
-                                    'error'
-                                );
+                                var toasty = new Toasty(optionToast);
+                                toasty.configure(optionToast);
+                                toasty.error('Terjadi kesalahan saat menghapus data');
                             }
                         });
                     }

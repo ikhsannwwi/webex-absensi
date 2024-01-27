@@ -262,24 +262,24 @@ class UserGroupController extends Controller
         
         // Pastikan Anda memiliki mekanisme otorisasi di sini sebelum melanjutkan menghapus data.
 
-        $id = $request->id;
+        // $id = $request->id;
         
-        // Temukan grup pengguna berdasarkan ID yang diberikan.
-        $user_group = UserGroup::find($id);
+        // // Temukan grup pengguna berdasarkan ID yang diberikan.
+        // $user_group = UserGroup::find($id);
         
-        if (!$user_group) {
-            return response()->json(['message' => 'User group not found'], 404);
-        }
+        // if (!$user_group) {
+        //     return response()->json(['message' => 'User group not found'], 404);
+        // }
 
-        $log = $user_group;
-        // Hapus semua entri hak akses (permissions) terkait dengan grup pengguna ini.
-        $user_group->permissions()->delete();
+        // $log = $user_group;
+        // // Hapus semua entri hak akses (permissions) terkait dengan grup pengguna ini.
+        // $user_group->permissions()->delete();
 
-        // Hapus grup pengguna.
-        $data = $user_group->delete();
+        // // Hapus grup pengguna.
+        // $data = $user_group->delete();
 
-        // Tulis log jika diperlukan.
-        createLog(static::$module, __FUNCTION__, $id,['Data yang dihapus' => $log]);
+        // // Tulis log jika diperlukan.
+        // createLog(static::$module, __FUNCTION__, $id,['Data yang dihapus' => $log]);
 
         return response()->json(['message' => 'User group deleted successfully']);
     }
