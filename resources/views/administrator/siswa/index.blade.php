@@ -10,29 +10,29 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-6">
-                                Users
+                                Siswa
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
                                         </li>
-                                        <li class="breadcrumb-item active" aria-current="page">User</li>
+                                        <li class="breadcrumb-item active" aria-current="page">Siswa</li>
                                     </ol>
                                 </nav>
                             </div>
                             <div class="col-6">
-                                @if (isallowed('user', 'add'))
-                                    <a href="{{ route('admin.users.add') }}" class="btn btn-primary me-3 float-end">Tambah
+                                @if (isallowed('siswa', 'add'))
+                                    <a href="{{ route('admin.siswa.add') }}" class="btn btn-primary me-3 float-end">Tambah
                                         Data</a>
                                 @endif
-                                @if (isallowed('user', 'arsip'))
-                                    <a href="{{ route('admin.users.arsip') }}"
+                                @if (isallowed('siswa', 'arsip'))
+                                    <a href="{{ route('admin.siswa.arsip') }}"
                                         class="btn btn-primary mx-3 float-end">Arsip</a>
                                 @endif
                                 <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
                             </div>
                         </div>
                     </div>
-                    @include('administrator.users.filter.main')
+                    @include('administrator.siswa.filter.main')
                     <div class="card-body">
                         <table class="table" id="datatable">
                             <thead>
@@ -54,7 +54,7 @@
 
     <!-- Basic Tables end -->
 
-    @include('administrator.users.modal.detail')
+    @include('administrator.siswa.modal.detail')
 @endsection
 
 @push('js')
@@ -76,7 +76,7 @@
                 ],
                 scrollX: true, // Enable horizontal scrolling
                 ajax: {
-                    url: '{{ route('admin.users.getData') }}',
+                    url: '{{ route('admin.siswa.getData') }}',
                     dataType: "JSON",
                     type: "GET",
                     data: function(d) {
@@ -168,7 +168,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "DELETE",
-                            url: "{{ route('admin.users.delete') }}",
+                            url: "{{ route('admin.siswa.delete') }}",
                             data: {
                                 "_token": "{{ csrf_token() }}",
                                 "_method": "DELETE",
@@ -228,7 +228,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "POST",
-                            url: "{{ route('admin.users.changeStatus') }}",
+                            url: "{{ route('admin.siswa.changeStatus') }}",
                             data: ({
                                 "_token": "{{ csrf_token() }}",
                                 "_method": "POST",
@@ -267,6 +267,7 @@
 
             });
 
+
             $('#filter_submit').on('click', function(event) {
                 event.preventDefault(); // Prevent the default form submission behavior
 
@@ -275,7 +276,7 @@
                 var filterUserGroup = getUserGroup();
 
                 // Update the DataTable with the filtered data
-                data_table.ajax.url('{{ route('admin.users.getData') }}?status=' + filterStatus +
+                data_table.ajax.url('{{ route('admin.siswa.getData') }}?status=' + filterStatus +
                         '|usergroup=' + filterUserGroup)
                     .load();
             });

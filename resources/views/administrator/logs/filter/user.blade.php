@@ -171,7 +171,7 @@
             });
 
             // click di tombol Pilih User
-            $('#selectData-User').on('click', function() {
+            $('#selectData-User').off('click').on('click', function() {
                 // Get the selected row data
                 var selectedRowData = data_table_user.rows('.selected').data()[0];
 

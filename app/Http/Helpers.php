@@ -100,7 +100,6 @@ function isAllowed($modul, $modul_akses)
 	}
 	$data_user = User::find(auth()->user()->id);
 	$grup_pengguna_id = $data_user->user_group_id;
-	$permission = getPermissionGroup($grup_pengguna_id);
 	if ($grup_pengguna_id == 0) {
 		return TRUE;
 	} else {
@@ -148,19 +147,19 @@ function getDefaultPermission()
 function getPermissionGroup($user_group_id)
 {
 	$data_akses = ModuleAccess::select(DB::raw('
-    module.identifiers as module_identifiers,
-    module_access.*,
-    user_group_permissions.user_group_id,
-    user_group_permissions.status'))
-		->leftJoin(
-			DB::raw("user_group_permissions"),
-			function ($join) use ($user_group_id) {
-				$join->on('user_group_permissions.module_access_id', '=', 'module_access.id')
-                ->where("user_group_permissions.user_group_id", "=", $user_group_id);
-			}
-		)
-		->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
-		->get();
+        module.identifiers as module_identifiers,
+        module_access.*,
+        user_group_permissions.user_group_id,
+        user_group_permissions.status'))
+        ->leftJoin(
+            DB::raw("user_group_permissions"),
+            function ($join) use ($user_group_id) {
+                $join->on('user_group_permissions.module_access_id', '=', 'module_access.id')
+						->where("user_group_permissions.user_group_id", $user_group_id);
+            }
+        )
+        ->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
+        ->get();
 	$permission = [];
 	$index = 0;
 
@@ -180,19 +179,19 @@ function getPermissionGroup($user_group_id)
 function getPermissionGroup2($x)
 {
 	$data_akses = ModuleAccess::select(DB::raw('
-    module.identifiers as module_identifiers,
-    module_access.*,
-    user_group_permissions.user_group_id,
-    user_group_permissions.status'))
-		->leftJoin(
-			DB::raw("user_group_permissions"),
-			function ($join) use ($x) {
-				$join->on('user_group_permissions.module_access_id', '=', 'module_access.id')
-                ->where("user_group_permissions.user_group_id", "=", $x);
-			}
-		)
-		->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
-		->get();
+        module.identifiers as module_identifiers,
+        module_access.*,
+        user_group_permissions.user_group_id,
+        user_group_permissions.status'))
+        ->leftJoin(
+            DB::raw("user_group_permissions"),
+            function ($join) use ($x) {
+                $join->on('user_group_permissions.module_access_id', '=', 'module_access.id')
+                    ->where("user_group_permissions.user_group_id", "=", $x); // Explicitly cast to string
+            }
+        )
+        ->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
+        ->get();
         // dd($x);
 	$permission = [];
 	$index = 0;
@@ -216,19 +215,19 @@ function getPermissionModuleGroup()
 	$data_user = User::find(auth()->user()->id);
 	$grup_pengguna_id = $data_user->user_group_id;
 	$data_akses = ModuleAccess::select(DB::raw('
-    module.identifiers as module_identifiers, 
-    COUNT(user_group_permissions.id) as permission_given'))
-		->leftJoin(
-			DB::raw("user_group_permissions"),
-			function ($join) use ($grup_pengguna_id) {
-				$join->on('user_group_permissions.module_access_id', '=', 'module_access.id')
-                ->where("user_group_permissions.user_group_id", "=", $grup_pengguna_id)
-                ->where("user_group_permissions.status", 1);
-			}
-		)
-		->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
-		->groupBy("module.id")
-		->get();
+        module.identifiers as module_identifiers, 
+        COUNT(user_group_permissions.id) as permission_given'))
+        ->leftJoin(
+            DB::raw("user_group_permissions"),
+            function ($join) use ($grup_pengguna_id) {
+                $join->on('user_group_permissions.module_access_id', '=', 'module_access.id')
+                    ->where("user_group_permissions.user_group_id", "=", $grup_pengguna_id) // Explicitly cast to string
+                    ->where("user_group_permissions.status", 1);
+            }
+        )
+        ->leftJoin(DB::raw("module"), "module.id", "=", "module_access.module_id")
+        ->groupBy("module.id")
+        ->get();
 
 	$permission = [];
 	$index = 0;

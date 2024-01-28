@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnModuleIdToModuleAccesssTable extends Migration
+class AddColumnStatusToSiswaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddColumnModuleIdToModuleAccesssTable extends Migration
      */
     public function up()
     {
-        Schema::table('module_access', function (Blueprint $table) {
-            $table->foreignId('module_id');
+        Schema::table('siswa', function (Blueprint $table) {
+            $table->integer('status');
         });
     }
 
@@ -25,7 +25,7 @@ class AddColumnModuleIdToModuleAccesssTable extends Migration
      */
     public function down()
     {
-        Schema::table('module_access', function (Blueprint $table) {
+        Schema::table('siswa', function (Blueprint $table) {
             //
         });
     }

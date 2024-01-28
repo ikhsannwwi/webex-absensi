@@ -23,17 +23,9 @@
                                 class="form" id="form" data-parsley-validate>
                                 @csrf
                                 @method('POST')
-                                <div class="row">
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group mandatory">
-                                            <label for="userGroupField" class="form-label">User Group</label>
-                                            <select class="form-select form-select-solid" name="user_group"
-                                                id="userGroupField" data-parsley-required="true">
+                                
+                                @include('administrator.users.modal.user_group')
 
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <div class="form-group mandatory">
@@ -49,7 +41,8 @@
                                         <div class="form-group mandatory">
                                             <label for="emailField" class="form-label">Email</label>
                                             <input type="text" id="emailField" class="form-control"
-                                                placeholder="Masukan Email" name="email" autocomplete="off"
+                                                placeholder="Masukan Email" name="email" autocomplete="off" data-parsley-type="email"
+                                                data-parsley-trigger="change" data-parsley-error-message="Masukan alamat email yang valid."
                                                 data-parsley-required="true">
                                             <div class="" style="color: #dc3545" id="accessErrorEmail"></div>
                                         </div>
@@ -391,50 +384,6 @@
                 }
             }
 
-
-
-            var optionUserGroup = $('#userGroupField');
-
-
-            optionUserGroup.html(
-                '<option id="loadingSpinner" style="display: none;">' +
-                '<i class="fas fa-spinner fa-spin">' +
-                '</i> Sedang memuat...</option>'
-            );
-
-            var loadingSpinner = $('#loadingSpinner');
-
-            loadingSpinner.show(); // Tampilkan elemen animasi
-
-            $.ajax({
-                url: '{{ route('admin.users.getUserGroup') }}',
-                method: 'GET',
-                success: function(response) {
-                    var data = response.usergroup;
-                    var optionsHtml = ''; // Store the generated option elements
-
-                    // Iterate through each user group in the response data
-                    for (var i = 0; i < data.length; i++) {
-                        var userGroup = data[i];
-                        optionsHtml += '<option value="' + userGroup.id + '">' + userGroup
-                            .name + '</option>';
-                    }
-
-                    // Construct the final dropdown HTML
-                    var finalDropdownHtml = '<option value="">Pilih Data</option>' + optionsHtml;
-
-                    optionUserGroup.html(finalDropdownHtml);
-
-                    loadingSpinner.hide(); // Hide the loading spinner after data is loaded
-                },
-                error: function() {
-                    // Handle the error case if the AJAX request fails
-                    console.error('Gagal memuat data User Group.');
-                    optionUserGroup.html('<option>Gagal memuat data</option>')
-                    loadingSpinner
-                        .hide(); // Hide the loading spinner even if there's an error
-                }
-            });
 
         });
     </script>

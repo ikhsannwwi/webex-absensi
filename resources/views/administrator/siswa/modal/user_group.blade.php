@@ -1,47 +1,47 @@
 <div class="col-md-6 col-12">
-    <label for="inputModule">Module</label>
-    <div class="row">
-        <div class="col-8" style="padding-right: 0;">
-            <!-- Menggunakan col-8 agar input lebih lebar dan menghapus padding kanan -->
-            <input type="text" class="form-control" id="inputModuleName" readonly>
-            <input type="text" class="d-none" name="module" id="inputModule">
-        </div>
-        <div class="col-4" style="padding-left: 0;">
-            <!-- Menggunakan col-4 agar tombol "Search" lebih kecil dan menghapus padding kiri -->
-            <a href="#" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
-                data-bs-target="#filterModuleLogSystem">
-                Search
-            </a>
+    <div class="form-group mandatory">
+        <label for="inputUser" class="form-label">User Group</label>
+        <div class="row">
+            <div class="col-8" style="padding-right: 0;">
+                <!-- Menggunakan col-8 agar input lebih lebar dan menghapus padding kanan -->
+                <input type="text" class="form-control" value="{{Route::is('admin.siswa.edit*') ? $data->user_group->name : ''}}" id="inputUserGroupName" readonly>
+                <input type="text" class="d-none" value="{{Route::is('admin.siswa.edit*') ? $data->user_group->id : ''}}" name="user_group" id="inputUserGroupId">
+            </div>
+            <div class="col-4" style="padding-left: 0;">
+                <!-- Menggunakan col-4 agar tombol "Search" lebih kecil dan menghapus padding kiri -->
+                <a href="#" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#filterUserGroup">
+                    Search
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
 
 
-<!-- Modal Detail Module -->
-<div class="modal fade" id="filterModuleLogSystem" tabindex="-1" aria-labelledby="filterModuleLogSystemLabel"
-    aria-hidden="true">
+<!-- Modal Detail User -->
+<div class="modal fade" id="filterUserGroup" tabindex="-1" aria-labelledby="filterUserGroupLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="filterModuleLogSystemLabel">Filter Module</h5>
-                <button type="button" id="buttonCloseModuleModal" class="btn-close" data-bs-dismiss="modal"
+                <h5 class="modal-title" id="filterUserGroupLabel">Filter User</h5>
+                <button type="button" id="buttonCloseUserGroup" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="filterModuleLogSystemBody">
-                <table class="table" id="datatableModuleModal">
+            <div class="modal-body" id="filterUserGroupBody">
+                <table class="table" id="datatableUserGroupModal">
                     <thead>
                         <tr>
                             <th width="15px">No</th>
-                            <th width="150px">Identifiers</th>
-                            <th width="100%">Nama</th>
+                            <th width="100%">User Group</th>
                         </tr>
                     </thead>
                 </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="selectData-Module">Pilih Data</button>
+                <button type="button" class="btn btn-primary" id="selectData-UserGroup">Pilih Data</button>
             </div>
         </div>
     </div>
@@ -49,9 +49,8 @@
 
 @push('js')
     <script>
-        // Function to add 'selected' class to the row based on the module identifiers
-        function addSelectedClassByModuleIdentifiers(moduleIdentifiers) {
-            var table = $('#datatableModuleModal').DataTable();
+        function addSelectedClassByUserGroupId(userGroupId) {
+            var table = $('#datatableUserGroupModal').DataTable();
 
             // Check if the 'select' extension is available
             if ($.fn.dataTable.Select) {
@@ -63,11 +62,10 @@
             }
 
             table.rows().nodes().to$().removeClass('selected'); // Remove 'selected' class from all rows
-
-            if (moduleIdentifiers) {
+            if (userGroupId) {
                 table.rows().every(function() {
                     var rowData = this.data();
-                    if (rowData.identifiers === moduleIdentifiers) {
+                    if (rowData.id === parseInt(userGroupId)) {
                         // Check if the 'select' extension is available before using 'select' method
                         if ($.fn.dataTable.Select && table.select) {
                             this.select(); // Select the row
@@ -79,15 +77,13 @@
             }
         }
 
-
-
-        $('#filterModuleLogSystem').on('show.bs.modal', function(event) {
+        $('#filterUserGroup').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
 
             // Now, you can initialize a new DataTable on the same table.
-            $("#datatableModuleModal").DataTable().destroy();
-            $('#datatableModuleModal tbody').remove();
-            var data_table_module = $('#datatableModuleModal').DataTable({
+            $("#datatableUserGroupModal").DataTable().destroy();
+            $('#datatableUserGroupModal tbody').remove();
+            var data_table_user = $('#datatableUserGroupModal').DataTable({
                 "oLanguage": {
                     "oPaginate": {
                         "sFirst": "<i class='ti-angle-left'></i>",
@@ -102,7 +98,7 @@
                     [0, 'asc']
                 ],
                 ajax: {
-                    url: '{{ route('admin.logSystems.getDataModule') }}',
+                    url: '{{ route('admin.siswa.getDataUserGroup') }}',
                     dataType: "JSON",
                     type: "GET",
                 },
@@ -112,18 +108,14 @@
                         },
                     },
                     {
-                        data: 'identifiers',
-                        name: 'identifiers'
-                    },
-                    {
                         data: 'name',
                         name: 'name'
                     },
                 ],
                 drawCallback: function(settings) {
                     // Add 'selected' class based on the content of the input fields
-                    var moduleIdentifiers = $("#inputModule").val();
-                    addSelectedClassByModuleIdentifiers(moduleIdentifiers);
+                    var userGroupId = $("#inputUserGroupId").val();
+                    addSelectedClassByUserGroupId(userGroupId);
                 },
             });
 
@@ -156,39 +148,41 @@
                 prependTo: document.body.childNodes[0],
             };
 
-            // click di baris tabel module
-            $('#datatableModuleModal tbody').on('click', 'tr', function() {
+            // click di baris tabel user
+            $('#datatableUserGroupModal tbody').on('click', 'tr', function() {
                 // Remove the 'selected' class from all rows
-                $('#datatableModuleModal tbody tr').removeClass('selected');
+                $('#datatableUserGroupModal tbody tr').removeClass('selected');
 
                 // Add the 'selected' class to the clicked row
                 $(this).addClass('selected');
 
-                var data = data_table_module.row(this).data();
+                var data = data_table_user.row(this).data();
             });
 
-            // click di tombol Pilih Module
-            $('#selectData-Module').off('click').on('click', function() {
+            // click di tombol Pilih UserGroup
+            $('#selectData-UserGroup').off('click').on('click', function(e) {
+                e.preventDefault();
+
                 // Get the selected row data
-                var selectedRowData = data_table_module.rows('.selected').data()[0];
+                var selectedRowData = data_table_user.rows('.selected').data()[0];
+
                 // Check if any row is selected
                 if (selectedRowData) {
                     // Use the selected row data
-                    $("#inputModule").val(selectedRowData.identifiers);
-                    $("#inputModuleName").val(selectedRowData.name);
+                    $("#inputUserGroupName").val(selectedRowData.name);
+                    $("#inputUserGroupId").val(selectedRowData.id);
 
-                    console.log(selectedRowData)
                     // Close the modal
-                    $('#buttonCloseModuleModal').click();
+                    $('#buttonCloseUserGroup').click();
                 } else {
-                    console.log(selectedRowData)
-                    $('#buttonCloseModuleModal').click();
+                    $('#buttonCloseUserGroup').click();
+
                     var toasty = new Toasty(optionToast);
                     toasty.configure(optionToast);
                     toasty.error('Pilih salah satu');
                 }
             });
-            // end click di tombol Pilih Module
+            // end click di tombol Pilih UserGroup
         });
     </script>
 @endpush

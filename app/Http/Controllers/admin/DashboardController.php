@@ -40,7 +40,7 @@ class DashboardController extends Controller
 
     protected function statisticMonthly() {
         // Get data for the past 12 months of the current year
-        $monthlyStatistics = Statistic::selectRaw('DATE_FORMAT(visit_time, "%Y-%m") as month, COUNT(*) as count')
+        $monthlyStatistics = Statistic::selectRaw('TO_CHAR(visit_time, \'YYYY-MM\') as month, COUNT(*) as count')
             ->whereYear('visit_time', now()->year)
             ->groupByRaw('month')
             ->orderBy('month', 'desc')
@@ -59,16 +59,17 @@ class DashboardController extends Controller
     
         // Fill in data for existing months
         foreach ($monthlyStatistics as $month) {
-            $index = array_search(date('M',strtotime($month->month)) . ' (0)', $chartLabelsMonthly);
+            $index = array_search(date('M', strtotime($month->month)) . ' (0)', $chartLabelsMonthly);
             if ($index !== false) {
                 $chartDataMonthly[$index] = $month->count;
-                $chartLabelsMonthly[$index] = date('M',strtotime($month->month)) . ' (' . $month->count . ')';
+                $chartLabelsMonthly[$index] = date('M', strtotime($month->month)) . ' (' . $month->count . ')';
             }
         }
     
         return [
-            'chartData' => $chartDataMonthly,
+            'chartData'   => $chartDataMonthly,
             'chartLabels' => $chartLabelsMonthly,
         ];
     }
+    
 }

@@ -8,24 +8,24 @@
             <div class="col-xxl">
                 <div class="card mb-4">
                     <div class="card-header">
-                        Users
+                        Pembina
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.users') }}">User</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.pembina') }}">Pembina</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Edit</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.users.update') }}" method="post" enctype="multipart/form-data"
+                            <form action="{{ route('admin.pembina.update') }}" method="post" enctype="multipart/form-data"
                                 class="form" id="form" data-parsley-validate>
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" id="inputId" name="id" value="{{ $data->id }}">
-                                
-                                @include('administrator.users.modal.user_group')
+                               
+                                @include('administrator.pembina.modal.user_group')
 
                                 <div class="row">
                                     <div class="col-md-6 col-12">
@@ -46,6 +46,17 @@
                                                 data-parsley-trigger="change" data-parsley-error-message="Masukan alamat email yang valid."
                                                 autocomplete="off" data-parsley-required="true">
                                             <div class="" style="color: #dc3545" id="accessErrorEmail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="inputTelepon" class="form-label">Telepon</label>
+                                            <input type="text" id="inputTelepon" class="form-control"
+                                                placeholder="Masukan Nomor Telepon" name="no_telepon" value="{{ $data->no_telepon }}" autocomplete="off"
+                                                data-parsley-required="true">
+                                            <div class="" style="color: #dc3545" id="accessErrorTelepon"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +148,7 @@
                                             </span>
                                         </button>
                                         <button type="reset" class="btn btn-secondary me-1 mb-1">Reset</button>
-                                        <a href="{{ route('admin.users') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
+                                        <a href="{{ route('admin.pembina') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
                                     </div>
                                 </div>
                             </form>
@@ -162,7 +173,7 @@
             const kodeField = document.getElementById("kodeField");
             const indicatorLabelKode = document.querySelector(".indicator-label-kode");
             const indicatorProgressKode = document.querySelector(".indicator-progress-kode");
-            const remoteGenerateKodeUrl = "{{ route('admin.users.generateKode') }}";
+            const remoteGenerateKodeUrl = "{{ route('admin.pembina.generateKode') }}";
 
             generateKodeButton.addEventListener("click", async function() {
                 // Show the indicator when the button is clicked
@@ -245,13 +256,14 @@
                 const kodeValue = kodeField.val().trim();
 
                 // Validate the length and format of the kode
-                if (kodeValue.length !== 12 || !kodeValue.startsWith('sanapp-') || kodeValue.substring(
-                        7).length !== 5) {
+                // Validate the length and format of the kode
+                if (kodeValue.length !== 13 || !kodeValue.startsWith('pembina-') || kodeValue.substring(
+                        8).length !== 5) {
                     accessErrorKode.addClass('invalid-feedback');
                     kodeField.addClass('is-invalid');
 
                     accessErrorKode.text(
-                        'Kode harus 12 characters dan diawali dengan sanapp- lalu diakhiri oleh 5 uniqid.'
+                        'Kode harus 11 characters dan diawali dengan pembina- lalu diakhiri oleh 5 uniqid.'
                     );
                     return;
                 } else {
@@ -308,7 +320,7 @@
             async function validateRemoteEmail() {
                 const emailInput = $('#emailField');
                 const inputId = $('#inputId');
-                const remoteValidationUrl = "{{ route('admin.users.checkEmail') }}";
+                const remoteValidationUrl = "{{ route('admin.pembina.checkEmail') }}";
                 const csrfToken = "{{ csrf_token() }}";
 
                 try {
@@ -335,11 +347,42 @@
                     };
                 }
             }
+            
+            async function validateRemoteTelepon() {
+                const inputTelepon = $('#inputTelepon');
+                const inputId = $('#inputId');
+                const remoteValidationUrl = "{{ route('admin.pembina.checkTelepon') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            telepon: inputTelepon.val(),
+                            id: inputId.val()
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
 
             async function validateRemoteKode() {
                 const kodeInput = $('#kodeField');
                 const inputId = $('#inputId');
-                const remoteValidationUrl = "{{ route('admin.users.checkKode') }}";
+                const remoteValidationUrl = "{{ route('admin.pembina.checkKode') }}";
                 const csrfToken = "{{ csrf_token() }}";
 
                 try {

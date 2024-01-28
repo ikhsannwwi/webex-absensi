@@ -8,32 +8,42 @@
             <div class="col-xxl">
                 <div class="card mb-4">
                     <div class="card-header">
-                        Users
+                        Siswa
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('admin.users') }}">User</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.siswa') }}">Siswa</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Add</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.users.update') }}" method="post" enctype="multipart/form-data"
+                            <form action="{{ route('admin.siswa.save') }}" method="post" enctype="multipart/form-data"
                                 class="form" id="form" data-parsley-validate>
                                 @csrf
-                                @method('PUT')
-                                <input type="hidden" id="inputId" name="id" value="{{ $data->id }}">
+                                @method('POST')
                                 
-                                @include('administrator.users.modal.user_group')
+                                @include('administrator.siswa.modal.user_group')
 
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <div class="form-group mandatory">
                                             <label for="nameField" class="form-label">Nama</label>
                                             <input type="text" id="nameField" class="form-control"
-                                                placeholder="Masukan Nama" value="{{ $data->name }}" name="name"
-                                                autocomplete="off" data-parsley-required="true">
+                                                placeholder="Masukan Nama" name="name" autocomplete="off"
+                                                data-parsley-required="true">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="inputNis" class="form-label">Nis</label>
+                                            <input type="text" id="inputNis" class="form-control"
+                                                placeholder="Masukan Nomor Induk Sekolah" name="nis" autocomplete="off"
+                                                data-parsley-required="true">
+                                            <div class="" style="color: #dc3545" id="accessErrorNis"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -42,10 +52,21 @@
                                         <div class="form-group mandatory">
                                             <label for="emailField" class="form-label">Email</label>
                                             <input type="text" id="emailField" class="form-control"
-                                                placeholder="Masukan Email" value="{{ $data->email }}" name="email" data-parsley-type="email"
+                                                placeholder="Masukan Email" name="email" autocomplete="off" data-parsley-type="email"
                                                 data-parsley-trigger="change" data-parsley-error-message="Masukan alamat email yang valid."
-                                                autocomplete="off" data-parsley-required="true">
+                                                data-parsley-required="true">
                                             <div class="" style="color: #dc3545" id="accessErrorEmail"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group mandatory">
+                                            <label for="inputTelepon" class="form-label">Telepon</label>
+                                            <input type="text" id="inputTelepon" class="form-control"
+                                                placeholder="Masukan Nomor Telepon" name="no_telepon" autocomplete="off"
+                                                data-parsley-required="true">
+                                            <div class="" style="color: #dc3545" id="accessErrorTelepon"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +78,7 @@
                                                 <div class="col-8">
                                                     <input type="text" id="kodeField" class="form-control"
                                                         placeholder="Masukan Kode" name="kode" autocomplete="off"
-                                                        data-parsley-required="true" value="{{ $data->kode }}">
+                                                        data-parsley-required="true">
                                                     <div class="" style="color: #dc3545" id="accessErrorKode"></div>
                                                 </div>
                                                 <div class="col-2">
@@ -82,7 +103,8 @@
                                         <div class="form-group mandatory">
                                             <label for="passwordField" class="form-label">Password</label>
                                             <input type="text" id="passwordField" class="form-control"
-                                                placeholder="Masukan Password" name="password" autocomplete="off">
+                                                placeholder="Masukan Password" name="password" autocomplete="off"
+                                                data-parsley-required="true">
                                             <div class="" style="color: #dc3545" id="accessErrorPasssword"></div>
                                         </div>
                                     </div>
@@ -94,7 +116,7 @@
                                                 Password</label>
                                             <input type="text" id="konfirmasiPasswordField" class="form-control"
                                                 placeholder="Masukan Konfirmasi Password" name="konfirmasi_password"
-                                                autocomplete="off">
+                                                autocomplete="off" data-parsley-required="true">
                                             <div class="" style="color: #dc3545"
                                                 id="accessErrorKonfirmasiPasssword"></div>
                                         </div>
@@ -109,18 +131,10 @@
                                                 </label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="status"
-                                                        id="flexRadioDefault1" {{ $data->status ? 'checked' : '' }}
-                                                        value="1">
+                                                        value="1" id="flexRadioDefault1" checked
+                                                        data-parsley-required="true">
                                                     <label class="form-check-label form-label" for="flexRadioDefault1">
                                                         Aktif
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="status"
-                                                        id="flexRadioDefault2" {{ !$data->status ? 'checked' : '' }}
-                                                        value="0">
-                                                    <label class="form-check-label form-label" for="flexRadioDefault2">
-                                                        Tidak Aktif
                                                     </label>
                                                 </div>
                                             </fieldset>
@@ -137,7 +151,7 @@
                                             </span>
                                         </button>
                                         <button type="reset" class="btn btn-secondary me-1 mb-1">Reset</button>
-                                        <a href="{{ route('admin.users') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
+                                        <a href="{{ route('admin.siswa') }}" class="btn btn-danger me-1 mb-1">Cancel</a>
                                     </div>
                                 </div>
                             </form>
@@ -150,8 +164,6 @@
     <!-- Basic Tables end -->
 @endsection
 
-
-
 @push('js')
 <script src="{{ asset_administrator('assets/plugins/parsleyjs/parsley.min.js') }}"></script>
 
@@ -162,7 +174,7 @@
             const kodeField = document.getElementById("kodeField");
             const indicatorLabelKode = document.querySelector(".indicator-label-kode");
             const indicatorProgressKode = document.querySelector(".indicator-progress-kode");
-            const remoteGenerateKodeUrl = "{{ route('admin.users.generateKode') }}";
+            const remoteGenerateKodeUrl = "{{ route('admin.siswa.generateKode') }}";
 
             generateKodeButton.addEventListener("click", async function() {
                 // Show the indicator when the button is clicked
@@ -190,17 +202,13 @@
 
 
 
+
+
             //validate parsley form
             const form = document.getElementById("form");
             const validator = $(form).parsley();
 
             const submitButton = document.getElementById("formSubmit");
-
-            form.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                }
-            });
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();
@@ -224,6 +232,44 @@
                     accessErrorEmail.text('');
                 }
 
+                // Perform remote validation
+                const remoteValidationResultNis = await validateRemoteNis();
+                const inputNis = $("#inputNis");
+                const accessErrorNis = $("#accessErrorNis");
+                if (!remoteValidationResultNis.valid) {
+                    // Remote validation failed, display the error message
+                    accessErrorNis.addClass('invalid-feedback');
+                    inputNis.addClass('is-invalid');
+
+                    accessErrorNis.text(remoteValidationResultNis
+                        .errorMessage); // Set the error message from the response
+
+                    return;
+                } else {
+                    accessErrorNis.removeClass('invalid-feedback');
+                    inputNis.removeClass('is-invalid');
+                    accessErrorNis.text('');
+                }
+                
+                // Perform remote validation
+                const remoteValidationResultTelepon = await validateRemoteTelepon();
+                const inputTelepon = $("#inputTelepon");
+                const accessErrorTelepon = $("#accessErrorTelepon");
+                if (!remoteValidationResultTelepon.valid) {
+                    // Remote validation failed, display the error message
+                    accessErrorTelepon.addClass('invalid-feedback');
+                    inputTelepon.addClass('is-invalid');
+
+                    accessErrorTelepon.text(remoteValidationResultTelepon
+                        .errorMessage); // Set the error message from the response
+
+                    return;
+                } else {
+                    accessErrorTelepon.removeClass('invalid-feedback');
+                    inputTelepon.removeClass('is-invalid');
+                    accessErrorTelepon.text('');
+                }
+
                 const remoteValidationResultKode = await validateRemoteKode();
                 const kodeField = $("#kodeField");
                 const accessErrorKode = $("#accessErrorKode");
@@ -245,13 +291,13 @@
                 const kodeValue = kodeField.val().trim();
 
                 // Validate the length and format of the kode
-                if (kodeValue.length !== 12 || !kodeValue.startsWith('sanapp-') || kodeValue.substring(
-                        7).length !== 5) {
+                if (kodeValue.length !== 11 || !kodeValue.startsWith('siswa-') || kodeValue.substring(
+                        6).length !== 5) {
                     accessErrorKode.addClass('invalid-feedback');
                     kodeField.addClass('is-invalid');
 
                     accessErrorKode.text(
-                        'Kode harus 12 characters dan diawali dengan sanapp- lalu diakhiri oleh 5 uniqid.'
+                        'Kode harus 11 characters dan diawali dengan siswa- lalu diakhiri oleh 5 uniqid.'
                     );
                     return;
                 } else {
@@ -307,8 +353,7 @@
 
             async function validateRemoteEmail() {
                 const emailInput = $('#emailField');
-                const inputId = $('#inputId');
-                const remoteValidationUrl = "{{ route('admin.users.checkEmail') }}";
+                const remoteValidationUrl = "{{ route('admin.siswa.checkEmail') }}";
                 const csrfToken = "{{ csrf_token() }}";
 
                 try {
@@ -317,8 +362,65 @@
                         url: remoteValidationUrl,
                         data: {
                             _token: csrfToken,
-                            email: emailInput.val(),
-                            id: inputId.val()
+                            email: emailInput.val()
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
+            
+            async function validateRemoteNis() {
+                const inputNis = $('#inputNis');
+                const remoteValidationUrl = "{{ route('admin.siswa.checkNis') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            nis: inputNis.val()
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
+            
+            async function validateRemoteTelepon() {
+                const inputTelepon = $('#inputTelepon');
+                const remoteValidationUrl = "{{ route('admin.siswa.checkTelepon') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            telepon: inputTelepon.val()
                         }
                     });
 
@@ -338,8 +440,7 @@
 
             async function validateRemoteKode() {
                 const kodeInput = $('#kodeField');
-                const inputId = $('#inputId');
-                const remoteValidationUrl = "{{ route('admin.users.checkKode') }}";
+                const remoteValidationUrl = "{{ route('admin.siswa.checkKode') }}";
                 const csrfToken = "{{ csrf_token() }}";
 
                 try {
@@ -349,7 +450,6 @@
                         data: {
                             _token: csrfToken,
                             kode: kodeInput.val(),
-                            id: inputId.val()
                         }
                     });
 
@@ -368,16 +468,7 @@
             }
 
             $('#passwordField, #konfirmasiPasswordField').on('input', function() {
-                if ($('#passwordField').val().trim() !== '') {
-                    validatePasswordConfirmation();
-                } else {
-                    // Clear validation messages when password field is empty
-                    $('#passwordField').removeClass('is-invalid');
-                    $('#accessErrorPasssword').text('');
-                    $('#konfirmasiPasswordField').removeClass('is-invalid');
-                    $('#accessErrorKonfirmasiPasssword').text('');
-                    return true;
-                }
+                validatePasswordConfirmation();
             });
 
             function validatePasswordConfirmation() {

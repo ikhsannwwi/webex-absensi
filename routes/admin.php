@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\viewController;
+use App\Http\Controllers\admin\SiswaController;
 use App\Http\Controllers\admin\ModuleController;
+use App\Http\Controllers\admin\PembinaController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\SettingController;
 use App\Http\Controllers\admin\DashboardController;
@@ -31,7 +33,22 @@ Route::prefix('admin')->group(function () {
     Route::post('profile/password/request', [ProfileController::class, 'email'])->name('admin.profile.password.email');
     Route::get('profile/password/reset/{token}', [ProfileController::class, 'resetPassword'])->name('admin.profile.password.reset');
     Route::post('profile/password/reset/{token}', [ProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
+
+
+    Route::get('registrasi', [AuthController::class, 'registrasi'])->name('admin.registrasi');
+
+    Route::get('registrasi/pembina', [AuthController::class, 'registrasi_pembina'])->name('admin.registrasi.pembina');
+    Route::post('registrasi/pembina/save', [AuthController::class, 'registrasi_pembina_save'])->name('admin.registrasi.pembina.save');
+    Route::post('registrasi/pembina/checkEmail', [AuthController::class, 'registrasi_pembina_checkEmail'])->name('admin.registrasi.pembina.checkEmail');
+    Route::post('registrasi/pembina/checkTelepon', [AuthController::class, 'registrasi_pembina_checkTelepon'])->name('admin.registrasi.pembina.checkTelepon');
+
+    Route::get('registrasi/siswa', [AuthController::class, 'registrasi_siswa'])->name('admin.registrasi.siswa');
+    Route::post('registrasi/siswa/save', [AuthController::class, 'registrasi_siswa_save'])->name('admin.registrasi.siswa.save');
+    Route::post('registrasi/siswa/checkEmail', [AuthController::class, 'registrasi_siswa_checkEmail'])->name('admin.registrasi.siswa.checkEmail');
+    Route::post('registrasi/siswa/checkNis', [AuthController::class, 'registrasi_siswa_checkNis'])->name('admin.registrasi.siswa.checkNis');
+    Route::post('registrasi/siswa/checkTelepon', [AuthController::class, 'registrasi_siswa_checkTelepon'])->name('admin.registrasi.siswa.checkTelepon');
     
+
     Route::get('login', [AuthController::class, 'login'])->name('admin.login');
     Route::post('login/checkEmail', [AuthController::class, 'checkEmail'])->name('admin.login.checkEmail');
     Route::post('login/checkPassword', [AuthController::class, 'checkPassword'])->name('admin.login.checkPassword');
@@ -75,6 +92,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('users/delete', [UserController::class, 'delete'])->name('admin.users.delete');
         Route::get('users/getDetail-{id}', [UserController::class, 'getDetail'])->name('admin.users.getDetail');
         Route::get('users/getUserGroup', [UserController::class, 'getUserGroup'])->name('admin.users.getUserGroup');
+        Route::get('users/getDataUserGroup', [UserController::class, 'getDataUserGroup'])->name('admin.users.getDataUserGroup');
         Route::post('users/changeStatus',[UserController::class, 'changeStatus'])->name('admin.users.changeStatus');
         Route::get('users/generateKode',[UserController::class, 'generateKode'])->name('admin.users.generateKode');
         Route::post('users/checkEmail',[UserController::class, 'checkEmail'])->name('admin.users.checkEmail');
@@ -123,5 +141,50 @@ Route::prefix('admin')->group(function () {
         Route::get('statistic', [StatisticController::class, 'index'])->name('admin.statistic');
         Route::get('statistic/getData', [StatisticController::class, 'getData'])->name('admin.statistic.getData');
         Route::get('statistic/getDetail{id}', [StatisticController::class, 'getDetail'])->name('admin.statistic.getDetail');
+
+        //Siswa
+        Route::get('siswa', [SiswaController::class, 'index'])->name('admin.siswa');
+        Route::get('siswa/add', [SiswaController::class, 'add'])->name('admin.siswa.add');
+        Route::get('siswa/getData', [SiswaController::class, 'getData'])->name('admin.siswa.getData');
+        Route::post('siswa/save', [SiswaController::class, 'save'])->name('admin.siswa.save');
+        Route::get('siswa/edit/{id}', [SiswaController::class, 'edit'])->name('admin.siswa.edit');
+        Route::put('siswa/update', [SiswaController::class, 'update'])->name('admin.siswa.update');
+        Route::delete('siswa/delete', [SiswaController::class, 'delete'])->name('admin.siswa.delete');
+        Route::get('siswa/getDetail-{id}', [SiswaController::class, 'getDetail'])->name('admin.siswa.getDetail');
+        Route::get('siswa/getUserGroup', [SiswaController::class, 'getUserGroup'])->name('admin.siswa.getUserGroup');
+        Route::get('siswa/getDataUserGroup', [SiswaController::class, 'getDataUserGroup'])->name('admin.siswa.getDataUserGroup');
+        Route::post('siswa/changeStatus',[SiswaController::class, 'changeStatus'])->name('admin.siswa.changeStatus');
+        Route::get('siswa/generateKode',[SiswaController::class, 'generateKode'])->name('admin.siswa.generateKode');
+        Route::post('siswa/checkEmail',[SiswaController::class, 'checkEmail'])->name('admin.siswa.checkEmail');
+        Route::post('siswa/checkKode',[SiswaController::class, 'checkKode'])->name('admin.siswa.checkKode');
+        Route::post('siswa/checkNis',[SiswaController::class, 'checkNis'])->name('admin.siswa.checkNis');
+        Route::post('siswa/checkTelepon',[SiswaController::class, 'checkTelepon'])->name('admin.siswa.checkTelepon');
+
+        Route::get('siswa/arsip',[SiswaController::class, 'arsip'])->name('admin.siswa.arsip');
+        Route::get('siswa/arsip/getDataArsip',[SiswaController::class, 'getDataArsip'])->name('admin.siswa.getDataArsip');
+        Route::put('siswa/arsip/restore',[SiswaController::class, 'restore'])->name('admin.siswa.restore');
+        Route::delete('siswa/arsip/forceDelete',[SiswaController::class, 'forceDelete'])->name('admin.siswa.forceDelete');
+
+        //Pembina
+        Route::get('pembina', [PembinaController::class, 'index'])->name('admin.pembina');
+        Route::get('pembina/add', [PembinaController::class, 'add'])->name('admin.pembina.add');
+        Route::get('pembina/getData', [PembinaController::class, 'getData'])->name('admin.pembina.getData');
+        Route::post('pembina/save', [PembinaController::class, 'save'])->name('admin.pembina.save');
+        Route::get('pembina/edit/{id}', [PembinaController::class, 'edit'])->name('admin.pembina.edit');
+        Route::put('pembina/update', [PembinaController::class, 'update'])->name('admin.pembina.update');
+        Route::delete('pembina/delete', [PembinaController::class, 'delete'])->name('admin.pembina.delete');
+        Route::get('pembina/getDetail-{id}', [PembinaController::class, 'getDetail'])->name('admin.pembina.getDetail');
+        Route::get('pembina/getUserGroup', [PembinaController::class, 'getUserGroup'])->name('admin.pembina.getUserGroup');
+        Route::get('pembina/getDataUserGroup', [PembinaController::class, 'getDataUserGroup'])->name('admin.pembina.getDataUserGroup');
+        Route::post('pembina/changeStatus',[PembinaController::class, 'changeStatus'])->name('admin.pembina.changeStatus');
+        Route::get('pembina/generateKode',[PembinaController::class, 'generateKode'])->name('admin.pembina.generateKode');
+        Route::post('pembina/checkEmail',[PembinaController::class, 'checkEmail'])->name('admin.pembina.checkEmail');
+        Route::post('pembina/checkKode',[PembinaController::class, 'checkKode'])->name('admin.pembina.checkKode');
+        Route::post('pembina/checkTelepon',[PembinaController::class, 'checkTelepon'])->name('admin.pembina.checkTelepon');
+
+        Route::get('pembina/arsip',[PembinaController::class, 'arsip'])->name('admin.pembina.arsip');
+        Route::get('pembina/arsip/getDataArsip',[PembinaController::class, 'getDataArsip'])->name('admin.pembina.getDataArsip');
+        Route::put('pembina/arsip/restore',[PembinaController::class, 'restore'])->name('admin.pembina.restore');
+        Route::delete('pembina/arsip/forceDelete',[PembinaController::class, 'forceDelete'])->name('admin.pembina.forceDelete');
     });
 });

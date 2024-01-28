@@ -25,16 +25,24 @@
         </li>
 
         <!-- Layouts -->
-        <li class="menu-item">
+        <li class="menu-item {{ Route::is('admin.siswa*', 'admin.pembina*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">Data Master</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Without menu">Without menu</div>
+                <li class="menu-item {{ Route::is('admin.siswa*') ? 'active' : '' }}">
+                    <a href="{{route('admin.siswa')}}" class="menu-link">
+                        <div data-i18n="Siswa">Siswa</div>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="menu-sub">
+                <li class="menu-item {{ Route::is('admin.pembina*') ? 'active' : '' }}">
+                    <a href="{{route('admin.pembina')}}" class="menu-link">
+                        <div data-i18n="Pembina">Pembina</div>
                     </a>
                 </li>
             </ul>

@@ -62,9 +62,10 @@
                 @csrf
                 @method('POST')
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email or Username</label>
+                    <label for="email" class="form-label">Email</label>
                     <input type="text" class="form-control" name="email" id="inputEmail"
-                        placeholder="Enter your email or username" autofocus  autocomplete="off"/>
+                        placeholder="Enter your email or username" autofocus data-parsley-type="email"
+                        data-parsley-trigger="change" data-parsley-error-message="Masukan alamat email yang valid." data-parsley-required="true" autocomplete="off"/>
                     <div class="" style="color: #dc3545" id="accessErrorEmail"></div>
                 </div>
                 <div class="mb-3 form-password-toggle">
@@ -75,7 +76,7 @@
                         </a>
                     </div>
                     <div class="input-group input-group-merge">
-                        <input type="password" class="form-control" name="password" id="inputPassword" autocomplete="off"
+                        <input type="password" class="form-control" name="password" id="inputPassword" autocomplete="off" data-parsley-required="true"
                             placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                             aria-describedby="password" />
                         <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
@@ -95,7 +96,7 @@
 
             <p class="text-center">
                 <span>New on our platform?</span>
-                <a href="auth-register-basic.html">
+                <a href="{{route('admin.registrasi')}}">
                     <span>Create an account</span>
                 </a>
             </p>
@@ -113,12 +114,6 @@
             const validator = $(form).parsley();
 
             const submitButton = document.getElementById("formSubmit");
-
-            // form.addEventListener('keydown', function(e) {
-            //     if (e.key === 'Enter') {
-            //         e.preventDefault();
-            //     }
-            // });
 
             submitButton.addEventListener("click", async function(e) {
                 e.preventDefault();

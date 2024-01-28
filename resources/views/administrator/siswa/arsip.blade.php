@@ -10,29 +10,22 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-6">
-                                Users
+                                Arsip Siswa
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a>
                                         </li>
-                                        <li class="breadcrumb-item active" aria-current="page">User</li>
+                                        <li class="breadcrumb-item"><a href="{{ route('admin.siswa') }}">Siswa</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Arsip</li>
                                     </ol>
                                 </nav>
                             </div>
                             <div class="col-6">
-                                @if (isallowed('user', 'add'))
-                                    <a href="{{ route('admin.users.add') }}" class="btn btn-primary me-3 float-end">Tambah
-                                        Data</a>
-                                @endif
-                                @if (isallowed('user', 'arsip'))
-                                    <a href="{{ route('admin.users.arsip') }}"
-                                        class="btn btn-primary mx-3 float-end">Arsip</a>
-                                @endif
                                 <a href="javascript:void(0)" class="btn btn-primary float-end" id="filterButton">Filter</a>
                             </div>
                         </div>
                     </div>
-                    @include('administrator.users.filter.main')
+                    @include('administrator.siswa.filter.main')
                     <div class="card-body">
                         <table class="table" id="datatable">
                             <thead>
@@ -41,7 +34,6 @@
                                     <th width="200px">User Group</th>
                                     <th width="50%">Nama</th>
                                     <th width="50%">Email</th>
-                                    <th width="150px">Status</th>
                                     <th width="225px">Action</th>
                                 </tr>
                             </thead>
@@ -54,7 +46,7 @@
 
     <!-- Basic Tables end -->
 
-    @include('administrator.users.modal.detail')
+    @include('administrator.siswa.modal.detail')
 @endsection
 
 @push('js')
@@ -76,7 +68,7 @@
                 ],
                 scrollX: true, // Enable horizontal scrolling
                 ajax: {
-                    url: '{{ route('admin.users.getData') }}',
+                    url: '{{ route('admin.siswa.getDataArsip') }}',
                     dataType: "JSON",
                     type: "GET",
                     data: function(d) {
@@ -103,14 +95,9 @@
                         name: 'email'
                     },
                     {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
                         data: 'action',
                         name: 'action',
                         searchable: false,
-                        sortable: false,
                         class: 'text-center'
                     }
                 ],
@@ -157,7 +144,7 @@
                 });
 
                 swalWithBootstrapButtons.fire({
-                    title: 'Apakah anda yakin ingin menghapus data ini',
+                    title: 'Apakah anda yakin ingin menghapus data ini secara permanent',
                     icon: 'warning',
                     buttonsStyling: false,
                     showCancelButton: true,
@@ -168,45 +155,32 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "DELETE",
-                            url: "{{ route('admin.users.delete') }}",
+                            url: "{{ route('admin.siswa.forceDelete') }}",
                             data: {
                                 "_token": "{{ csrf_token() }}",
                                 "_method": "DELETE",
                                 "id": id,
                             },
-                            success: function(response) {
+                            success: function() {
+                                // data_table.ajax.url(
+                                //         '{{ route('admin.siswa.getData') }}')
+                                //     .load();
                                 data_table.ajax.reload(null, false);
 
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.success(response.message);
-                            },
-                            error: function(response) {
-                                data_table.ajax.reload(null, false);
+                                toasty.success('Data berhasil dihapus secara permanent');
 
-                                var toasty = new Toasty(optionToast);
-                                toasty.configure(optionToast);
-                                toasty.success(response.responseJSON.message);
-                            },
+                                // Remove the deleted row from the DataTable without reloading the page
+                                // data_table.row($(this).parents('tr')).remove().draw();
+                            }
                         });
                     }
                 });
             });
 
-
-            //Change Status Confirmation
-            $(document).on('click', '.changeStatus', function(event) {
-                var ix = $(this).data('ix');
-                if ($(this).is(':checked')) {
-                    var status = "Tidak Aktif";
-                    var changeto = "Aktif";
-                    var message = "";
-                } else {
-                    var status = "Aktif"
-                    var changeto = "Tidak Aktif";
-                    var message = "";
-                }
-
+            $(document).on('click', '.restore', function(event) {
+                var id = $(this).data('id');
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
                         confirmButton: 'btn btn-success mx-4',
@@ -216,48 +190,37 @@
                 });
 
                 swalWithBootstrapButtons.fire({
-                    html: 'Apakah anda yakin ingin mengubah status ke ' + changeto + '?' + message,
-                    icon: "info",
+                    title: 'Apakah anda yakin ingin memulihkan data ini',
+                    icon: 'warning',
                     buttonsStyling: false,
                     showCancelButton: true,
-                    confirmButtonText: "Ya, saya yakin!",
-                    cancelButtonText: 'Tidak, batalkan',
+                    confirmButtonText: 'Ya, Saya yakin!',
+                    cancelButtonText: 'Tidak, Batalkan!',
                     reverseButtons: true
-
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            type: "POST",
-                            url: "{{ route('admin.users.changeStatus') }}",
-                            data: ({
+                            type: "PUT",
+                            url: "{{ route('admin.siswa.restore') }}",
+                            data: {
                                 "_token": "{{ csrf_token() }}",
-                                "_method": "POST",
-                                ix: ix,
-                                status: changeto,
-
-                            }),
-                            success: function(response) {
+                                "_method": "PUT",
+                                "id": id,
+                            },
+                            success: function() {
+                                // data_table.ajax.url(
+                                //         '{{ route('admin.siswa.getData') }}')
+                                //     .load();
                                 data_table.ajax.reload(null, false);
 
                                 var toasty = new Toasty(optionToast);
                                 toasty.configure(optionToast);
-                                toasty.success(response.message);
-                            },
-                            error: function(response) {
-                                data_table.ajax.reload(null, false);
+                                toasty.success('Data berhasil dipulihkan');
 
-                                var toasty = new Toasty(optionToast);
-                                toasty.configure(optionToast);
-                                toasty.success(response.responseJSON.message);
-                            },
+                                // Remove the PUT row from the DataTable without reloading the page
+                                // data_table.row($(this).parents('tr')).remove().draw();
+                            }
                         });
-
-                    } else {
-                        if (status == "Aktif") {
-                            $(this).prop("checked", true);
-                        } else {
-                            $(this).prop("checked", false);
-                        }
                     }
                 });
             });
@@ -265,6 +228,49 @@
             $('#filterButton').on('click', function() {
                 $('#filter_section').slideToggle();
 
+            });
+
+            var optionUserGroup = $('#filterusergroup');
+
+
+            optionUserGroup.html(
+                '<option id="loadingSpinner" style="display: none;">' +
+                '<i class="fas fa-spinner fa-spin">' +
+                '</i> Sedang memuat...</option>'
+            );
+
+            var loadingSpinner = $('#loadingSpinner');
+
+            loadingSpinner.show(); // Tampilkan elemen animasi
+
+            $.ajax({
+                url: '{{ route('admin.siswa.getUserGroup') }}',
+                method: 'GET',
+                success: function(response) {
+                    var data = response.usergroup;
+                    var optionsHtml = ''; // Store the generated option elements
+
+                    // Iterate through each user group in the response data
+                    for (var i = 0; i < data.length; i++) {
+                        var userGroup = data[i];
+                        optionsHtml += '<option value="' + userGroup.id + '">' + userGroup
+                            .name + '</option>';
+                    }
+
+                    // Construct the final dropdown HTML
+                    var finalDropdownHtml = '<option value="">Semua</option>' + optionsHtml;
+
+                    optionUserGroup.html(finalDropdownHtml);
+
+                    loadingSpinner.hide(); // Hide the loading spinner after data is loaded
+                },
+                error: function() {
+                    // Handle the error case if the AJAX request fails
+                    console.error('Gagal memuat data User Group.');
+                    optionUserGroup.html('<option>Gagal memuat data</option>')
+                    loadingSpinner
+                        .hide(); // Hide the loading spinner even if there's an error
+                }
             });
 
             $('#filter_submit').on('click', function(event) {
@@ -275,7 +281,7 @@
                 var filterUserGroup = getUserGroup();
 
                 // Update the DataTable with the filtered data
-                data_table.ajax.url('{{ route('admin.users.getData') }}?status=' + filterStatus +
+                data_table.ajax.url('{{ route('admin.siswa.getData') }}?status=' + filterStatus +
                         '|usergroup=' + filterUserGroup)
                     .load();
             });
@@ -285,7 +291,7 @@
             }
 
             function getUserGroup() {
-                return $("#inputUserGroupId").val();
+                return $("#filterusergroup").val();
             }
         });
     </script>

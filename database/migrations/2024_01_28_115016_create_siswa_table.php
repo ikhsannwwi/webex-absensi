@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserGroupPermissionsTable extends Migration
+class CreateSiswaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,20 @@ class CreateUserGroupPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_group_permissions', function (Blueprint $table) {
+        Schema::create('siswa', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_group_id');
-            $table->foreignId('module_access_id');
-            $table->string('status');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('no_telepon');
+            $table->integer('nis');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
+            $table->SoftDeletes();
             $table->foreignId('created_by')->nullable();
             $table->foreignId('updated_by')->nullable();
+            $table->foreignId('deleted_by')->nullable();
         });
     }
 
@@ -31,6 +37,6 @@ class CreateUserGroupPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_group_permissions');
+        Schema::dropIfExists('siswa');
     }
 }

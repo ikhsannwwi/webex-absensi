@@ -57,17 +57,37 @@
             <h4 class="mb-2">Welcome to Sneat! 👋</h4>
             <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-            <form action="{{ route('admin.profile.password.update', $resetPassword->token) }}" method="POST" id="form"
+            <form action="{{route('admin.registrasi.siswa.save')}}" method="POST" id="form"
                 novalidate="" data-parsley-validate>
                 @csrf
                 @method('POST')
                 <div class="mb-3">
+                    <label for="inputNama" class="form-label">Nama</label>
+                    <input type="text" class="form-control" name="name" id="inputNama"
+                        placeholder="Masukan Nama"
+                        autofocus data-parsley-required="true" autocomplete="off" />
+                </div>
+                <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="text" class="form-control" name="email" id="email"
-                        placeholder="Enter your email or username" data-parsley-type="email"
+                        placeholder="Enter your email" data-parsley-type="email"
                         data-parsley-trigger="change" data-parsley-error-message="Masukan alamat email yang valid."
                         autofocus data-parsley-required="true" autocomplete="off" />
                     <div class="" style="color: #dc3545" id="accessErrorEmail"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputNis" class="form-label">Nis</label>
+                    <input type="text" class="form-control" name="nis" id="inputNis"
+                        placeholder="Enter your nis" 
+                        autofocus data-parsley-required="true" autocomplete="off" />
+                    <div class="" style="color: #dc3545" id="accessErrorNis"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputTelepon" class="form-label">No Telepon</label>
+                    <input type="text" class="form-control" name="telepon" id="inputTelepon"
+                        placeholder="Enter your telepon" 
+                        autofocus data-parsley-required="true" autocomplete="off" />
+                    <div class="" style="color: #dc3545" id="accessErrorTelepon"></div>
                 </div>
                 <div class="mb-3 form-password-toggle">
                     <div class="d-flex justify-content-between">
@@ -96,7 +116,7 @@
                 </div>
                 <div class="mb-3">
                     <button type="submit" id="formSubmit" class="btn btn-primary d-grid w-100" tabindex="4">
-                        <span class="indicator-label">Reset</span>
+                        <span class="indicator-label">Submit</span>
                         <span class="indicator-progress" style="display: none;">
                             Tunggu Sebentar...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -143,6 +163,44 @@
                     accessErrorEmail.removeClass('invalid-feedback');
                     email.removeClass('is-invalid');
                     accessErrorEmail.text('');
+                }
+
+                // Perform remote validation
+                const remoteValidationResultNis = await validateRemoteNis();
+                const inputNis = $("#inputNis");
+                const accessErrorNis = $("#accessErrorNis");
+                if (!remoteValidationResultNis.valid) {
+                    // Remote validation failed, display the error message
+                    accessErrorNis.addClass('invalid-feedback');
+                    inputNis.addClass('is-invalid');
+
+                    accessErrorNis.text(remoteValidationResultNis
+                        .errorMessage); // Set the error message from the response
+
+                    return;
+                } else {
+                    accessErrorNis.removeClass('invalid-feedback');
+                    inputNis.removeClass('is-invalid');
+                    accessErrorNis.text('');
+                }
+                
+                // Perform remote validation
+                const remoteValidationResultTelepon = await validateRemoteTelepon();
+                const inputTelepon = $("#inputTelepon");
+                const accessErrorTelepon = $("#accessErrorTelepon");
+                if (!remoteValidationResultTelepon.valid) {
+                    // Remote validation failed, display the error message
+                    accessErrorTelepon.addClass('invalid-feedback');
+                    inputTelepon.addClass('is-invalid');
+
+                    accessErrorTelepon.text(remoteValidationResultTelepon
+                        .errorMessage); // Set the error message from the response
+
+                    return;
+                } else {
+                    accessErrorTelepon.removeClass('invalid-feedback');
+                    inputTelepon.removeClass('is-invalid');
+                    accessErrorTelepon.text('');
                 }
 
                 if (passwordField !== '') {
@@ -244,7 +302,7 @@
 
             async function validateRemoteEmail() {
                 const email = $('#email');
-                const remoteValidationUrl = "{{ route('admin.login.checkEmail') }}";
+                const remoteValidationUrl = "{{ route('admin.registrasi.siswa.checkEmail') }}";
                 const csrfToken = "{{ csrf_token() }}";
 
                 try {
@@ -254,6 +312,64 @@
                         data: {
                             _token: csrfToken,
                             email: email.val()
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
+
+            async function validateRemoteNis() {
+                const inputNis = $('#inputNis');
+                const remoteValidationUrl = "{{ route('admin.registrasi.siswa.checkNis') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            nis: inputNis.val()
+                        }
+                    });
+
+                    // Assuming the response is JSON and contains a "valid" key
+                    return {
+                        valid: response.valid === true,
+                        errorMessage: response.message
+                    };
+                } catch (error) {
+                    console.error("Remote validation error:", error);
+                    return {
+                        valid: false,
+                        errorMessage: "An error occurred during validation."
+                    };
+                }
+            }
+            
+            async function validateRemoteTelepon() {
+                const inputTelepon = $('#inputTelepon');
+                const remoteValidationUrl = "{{ route('admin.registrasi.siswa.checkTelepon') }}";
+                const csrfToken = "{{ csrf_token() }}";
+
+                try {
+                    const response = await $.ajax({
+                        method: "POST",
+                        url: remoteValidationUrl,
+                        data: {
+                            _token: csrfToken,
+                            telepon: inputTelepon.val()
                         }
                     });
 

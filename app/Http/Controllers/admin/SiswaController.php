@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\admin;
 
+use DB;
 use DataTables;
 use App\Models\Siswa;
 use App\Models\Pembina;
 use App\Models\admin\User;
 use Illuminate\Support\Str;
+use App\Models\ProfileSiswa;
 use Illuminate\Http\Request;
-use App\Models\admin\Profile;
 use App\Models\admin\UserGroup;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class SiswaController extends Controller
 {
     private static $module = "user";
 
@@ -23,11 +24,11 @@ class UserController extends Controller
             abort(403);
         }
 
-        return view('administrator.users.index');
+        return view('administrator.siswa.index');
     }
     
     public function getData(Request $request){
-        $data = User::query()->with('user_group');
+        $data = Siswa::query()->with('user_group');
 
         if (auth()->user()->email != 'dev@daysf.com') {
             $data->where('email', '!=', 'dev@daysf.com');
@@ -77,7 +78,7 @@ class UserController extends Controller
                 </a>';
                 endif;
                 if (isAllowed(static::$module, "edit")) : //Check permission
-                    $btn .= '<a href="'.route('admin.users.edit',$row->id).'" class="btn btn-primary btn-sm me-3 ">
+                    $btn .= '<a href="'.route('admin.siswa.edit',$row->id).'" class="btn btn-primary btn-sm me-3 ">
                     Edit
                 </a>';
                 endif;
@@ -98,7 +99,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        return view('administrator.users.add');
+        return view('administrator.siswa.add');
     }
     
     public function save(Request $request){
@@ -109,35 +110,49 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'email' => 'required|unique:users',
+            'email' => 'required|unique:siswa,email',
             'password' => 'required|min:8',
             'konfirmasi_password' => 'required|min:8|same:password',
             'user_group' => 'required',
             'status' => 'required',
-        ]);
-    
-        $data = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'user_group_id' => $request->user_group,
-            'status' => $request->status,
-            'kode' => $request->kode,
-            'remember_token' => Str::random(60),
+            'no_telepon' => 'required|unique:siswa,no_telepon',
+            'nis' => 'required|unique:siswa,nis',
+            'kode' => 'required|unique:siswa,kode',
         ]);
 
-        $profile = Profile::create([
-            'user_kode' => $data['kode'],
-            'sosial_media' => '{
-                "linkedin": "",
-                "twitter": "",
-                "instagram": "",
-                "facebook": ""
-              }',
-        ]);
+        try {
+            DB::beginTransaction();
+            $data = Siswa::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'user_group_id' => $request->user_group,
+                'status' => $request->status,
+                'confirm' => 1,
+                'kode' => $request->kode,
+                'nis' => $request->nis,
+                'no_telepon' => $request->no_telepon,
+                'remember_token' => Str::random(60),
+                'uuid' => Str::uuid(),
+            ]);
     
-        createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
-        return redirect()->route('admin.users')->with('success', 'Data berhasil disimpan.');
+            $profile = ProfileSiswa::create([
+                'siswa_kode' => $data['kode'],
+                'sosial_media' => '{
+                    "linkedin": "",
+                    "twitter": "",
+                    "instagram": "",
+                    "facebook": ""
+                  }',
+            ]);
+        
+            createLog(static::$module, __FUNCTION__, $data->id, ['Data yang disimpan' => $data]);
+            DB::commit();
+            return redirect()->route('admin.siswa')->with('success', 'Data berhasil disimpan.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->route('admin.siswa')->with('error', $th->getMessage());
+        }
     }
     
     
@@ -147,13 +162,13 @@ class UserController extends Controller
             abort(403);
         }
 
-        $data = User::find($id);
+        $data = Siswa::find($id);
 
         if ($data->email == 'dev@daysf.com' && auth()->user()->email != $data->email) {
-            return redirect()->route('admin.users')->with('warning', 'Forbidden.');
+            return redirect()->route('admin.siswa')->with('warning', 'Forbidden.');
         }
 
-        return view('administrator.users.edit',compact('data'));
+        return view('administrator.siswa.edit',compact('data'));
     }
     
     public function update(Request $request)
@@ -164,13 +179,15 @@ class UserController extends Controller
         }
 
         $id = $request->id;
-        $data = User::find($id);
+        $data = Siswa::find($id);
 
         $rules = [
             'name' => 'required',
-            'email' => 'required|unique:users,email,'.$id,
+            'email' => 'required|unique:siswa,email,'.$id,
             'user_group' => 'required',
-            'kode' => 'required|unique:users,kode,'.$id,
+            'kode' => 'required|unique:siswa,kode,'.$id,
+            'no_telepon' => 'required|unique:siswa,no_telepon,'.$id,
+            'nis' => 'required|unique:siswa,nis,'.$id,
         ];
 
         if ($request->password) {
@@ -189,6 +206,8 @@ class UserController extends Controller
             'user_group_id' => $request->user_group,
             'status' => $request->status,
             'kode' => $request->kode,
+            'nis' => $request->nis,
+            'no_telepon' => $request->no_telepon,
             'remember_token' => Str::random(60),
         ];
 
@@ -197,13 +216,13 @@ class UserController extends Controller
         }
 
         // Check if a profile exists for the user
-        $profile = Profile::where('user_kode', $data->kode)->firstOrNew([
-            'user_kode' => $data->kode,
+        $profile = ProfileSiswa::where('siswa_kode', $data->kode)->firstOrNew([
+            'siswa_kode' => $data->kode,
             'sosial_media' => '{"linkedin":"","twitter":"","instagram":"","facebook":""}',
         ]);
 
         // Update the profile data
-        $profile->user_kode = $updates['kode'];
+        $profile->siswa_kode = $updates['kode'];
         $profile->save();
 
         // Filter only the updated data
@@ -212,7 +231,7 @@ class UserController extends Controller
         $data->update($updates);
 
         createLog(static::$module, __FUNCTION__, $data->id, ['Data sebelum diupdate' => $previousData, 'Data sesudah diupdate' => $updatedData]);
-        return redirect()->route('admin.users')->with('success', 'Data berhasil diupdate.');
+        return redirect()->route('admin.siswa')->with('success', 'Data berhasil diupdate.');
     }
 
     
@@ -230,7 +249,7 @@ class UserController extends Controller
         $id = $request->id;
 
         // Find the user based on the provided ID.
-        $user = User::findorfail($id);
+        $user = Siswa::findorfail($id);
 
         if ($user->email == 'dev@daysf.com' && auth()->user()->email != $user->email) {
             return response()->json([
@@ -244,7 +263,7 @@ class UserController extends Controller
             return response()->json([
                 'code' => 404,
                 'status' => 'error',
-                'message' => 'Pengguna tidak ditemukan'
+                'message' => 'Data tidak ditemukan'
             ], 404);
         }
 
@@ -254,7 +273,7 @@ class UserController extends Controller
         // Delete the user.
         $user->delete();
 
-        $profile = Profile::where('user_kode', $user->kode)->first();
+        $profile = ProfileSiswa::where('siswa_kode', $user->kode)->first();
 
         if ($profile) {
             // Check if the profile is being force-deleted
@@ -267,7 +286,7 @@ class UserController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'message' => 'Pengguna telah dihapus.',
+            'message' => 'Data telah dihapus.',
         ],200);
     }
 
@@ -279,7 +298,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        $data = User::with('user_group')->with('profile')->find($id);
+        $data = Siswa::with('user_group')->with('profile')->find($id);
 
         return response()->json([
             'data' => $data,
@@ -298,12 +317,12 @@ class UserController extends Controller
         $data['status'] = $request->status == "Aktif" ? 1 : 0;
         $log = $request->status;
         $id = $request->ix;
-        $updates = User::where(["id" => $id])->first();
+        $updates = Siswa::where(["id" => $id])->first();
         if (!$updates) {
             return response()->json([
                 'code' => 404,
                 'status' => 'error',
-                'message' => 'Pengguna tidak ditemukan'
+                'message' => 'Data tidak ditemukan'
             ], 404);
         }
         // Simpan data sebelum diupdate
@@ -320,7 +339,7 @@ class UserController extends Controller
     }
     
     public function getUserGroup(){
-        $usergroup = UserGroup::all();
+        $usergroup = UserGroup::where('name', 'Siswa')->get();
 
         return response()->json([
             'usergroup' => $usergroup,
@@ -328,14 +347,14 @@ class UserController extends Controller
     }
 
     public function getDataUserGroup(){
-        $data = UserGroup::query();
+        $data = UserGroup::where('name', 'Siswa')->get();
 
         return DataTables::of($data)
             ->make(true);
     }
     
     public function generateKode(){
-        $generateKode = 'sanapp-' . substr(uniqid(), -5);
+        $generateKode = 'siswa-' . substr(uniqid(), -5);
 
         return response()->json([
             'generateKode' => $generateKode,
@@ -380,9 +399,51 @@ class UserController extends Controller
         }
     }
     
+    public function checkNis(Request $request){
+        if($request->ajax()){
+            $users = Siswa::where('nis', $request->nis)->withTrashed();
+            
+            if(isset($request->id)){
+                $users->where('id', '!=', $request->id);
+            }
+    
+            if($users->exists()){
+                return response()->json([
+                    'message' => 'Nis sudah dipakai',
+                    'valid' => false
+                ]);
+            } else {
+                return response()->json([
+                    'valid' => true
+                ]);
+            }
+        }
+    }
+    
+    public function checkTelepon(Request $request){
+        if($request->ajax()){
+            $users = Siswa::where('no_telepon', $request->telepon)->withTrashed();
+            
+            if(isset($request->id)){
+                $users->where('id', '!=', $request->id);
+            }
+    
+            if($users->exists()){
+                return response()->json([
+                    'message' => 'Telepon sudah dipakai',
+                    'valid' => false
+                ]);
+            } else {
+                return response()->json([
+                    'valid' => true
+                ]);
+            }
+        }
+    }
+    
     public function checkKode(Request $request){
         if($request->ajax()){
-            $users = User::where('kode', $request->kode)->withTrashed();
+            $users = Siswa::where('kode', $request->kode)->withTrashed();
             
             if(isset($request->id)){
                 $users->where('id', '!=', $request->id);
@@ -408,11 +469,11 @@ class UserController extends Controller
             abort(403);
         }
 
-        return view('administrator.users.arsip');
+        return view('administrator.siswa.arsip');
     }
 
     public function getDataArsip(Request $request){
-        $data = User::query()->with('user_group')->onlyTrashed();
+        $data = Siswa::query()->with('user_group')->onlyTrashed();
 
         if ($request->status || $request->usergroup) {
             if ($request->status != "") {
@@ -476,8 +537,8 @@ class UserController extends Controller
         }
         
         $id = $request->id;
-        $data = User::withTrashed()->find($id);
-        $profile = Profile::withTrashed()->where('user_kode', $data->kode)->first();
+        $data = Siswa::withTrashed()->find($id);
+        $profile = ProfileSiswa::where('siswa_kode', $data->kode)->first();
 
         if (!$data) {
             return response()->json([
@@ -487,8 +548,8 @@ class UserController extends Controller
         }
 
         if (!$profile) {
-            $profile = Profile::create([
-                'user_kode' => $data->kode,
+            $profile = ProfileSiswa::create([
+                'siswa_kode' => $data->kode,
             ]);
             $userProfiletoarray = '';
         } else {
@@ -502,9 +563,6 @@ class UserController extends Controller
         ];
 
         $data->restore();
-        if (!empty($profile)) {
-            $profile->restore();
-        }
 
         $updated = ['User' => $data, 'User Profile' => $profile];
 
@@ -527,16 +585,16 @@ class UserController extends Controller
         
         $id = $request->id;
 
-        $data = User::withTrashed()->find($id);
-        $profile = Profile::withTrashed()->where('user_kode',$data->kode)->first();
+        $data = Siswa::withTrashed()->find($id);
+        $profile = ProfileSiswa::where('siswa_kode',$data->kode)->first();
 
         if (!$data) {
-            return redirect()->route('admin.users.arsip')->with('error', 'Data tidak ditemukan.');
+            return redirect()->route('admin.siswa.arsip')->with('error', 'Data tidak ditemukan.');
         }
 
         $data->forceDelete();
         if (!empty($profile)) {
-            $profile->forceDelete();
+            $profile->delete();
             $dataJsonProfile = $profile;
         } else {
             $dataJsonProfile = '';
@@ -554,5 +612,4 @@ class UserController extends Controller
             'message' => 'Data telah dihapus secara permanent.',
         ]);
     }
-
 }
