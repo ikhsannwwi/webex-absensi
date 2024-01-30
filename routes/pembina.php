@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\siswa\DashboardController;
+use App\Http\Controllers\pembina\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +15,6 @@ use App\Http\Controllers\siswa\DashboardController;
 |
 */
 
-Route::prefix('siswa')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('siswa.dashboard');
+Route::prefix('pembina')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('pembina.dashboard');
 });

@@ -30,10 +30,6 @@ class PembinaController extends Controller
     public function getData(Request $request){
         $data = Pembina::query()->with('user_group');
 
-        if (auth()->user()->email != 'dev@daysf.com') {
-            $data->where('email', '!=', 'dev@daysf.com');
-        }
-
         if ($request->status || $request->usergroup) {
             if ($request->status != "") {
                 $status = $request->status == "Aktif" ? 1 : 0;
@@ -109,6 +105,7 @@ class PembinaController extends Controller
         }
 
         $request->validate([
+            'eskul' => 'required',
             'name' => 'required',
             'email' => 'required|unique:pembina,email',
             'password' => 'required|min:8',
@@ -122,7 +119,7 @@ class PembinaController extends Controller
         try {
             DB::beginTransaction();
             $data = Pembina::create([
-                'eskul_id' => 1,
+                'eskul_id' => $request->eskul,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -162,12 +159,22 @@ class PembinaController extends Controller
         }
 
         $data = Pembina::find($id);
-
-        if ($data->email == 'dev@daysf.com' && auth()->user()->email != $data->email) {
-            return redirect()->route('admin.pembina')->with('warning', 'Forbidden.');
+        if (!$data) {
+            return redirect()->route('admin.pembina')->with('error', 'Data tidak ditemukan');
         }
 
-        return view('administrator.pembina.edit',compact('data'));
+        // Menggunakan cURL untuk mengambil data dari API
+        $ch = curl_init("https://webex.smknegeri1garut.sch.id/api/eskul/detail/" . $data->eskul_id);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $exec = curl_exec($ch);
+        curl_close($ch);
+        
+        // Mengubah data JSON menjadi array
+        $decodedData = json_decode($exec, true);
+
+        $eskul = isset($decodedData['data']) ? $decodedData['data']['eskul'] : [];
+
+        return view('administrator.pembina.edit',compact('data', 'eskul'));
     }
     
     public function update(Request $request)
@@ -181,6 +188,7 @@ class PembinaController extends Controller
         $data = Pembina::find($id);
 
         $rules = [
+            'eskul' => 'required',
             'name' => 'required',
             'email' => 'required|unique:pembina,email,'.$id,
             'user_group' => 'required',
@@ -199,7 +207,7 @@ class PembinaController extends Controller
         $previousData = $data->toArray();
 
         $updates = [
-            'eskul_id' => 1,
+            'eskul_id' => $request->eskul,
             'name' => $request->name,
             'email' => $request->email,
             'user_group_id' => $request->user_group,
@@ -248,14 +256,6 @@ class PembinaController extends Controller
 
         // Find the user based on the provided ID.
         $user = Pembina::findorfail($id);
-
-        if ($user->email == 'dev@daysf.com' && auth()->user()->email != $user->email) {
-            return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-                'message' => 'Kamu tidak memiliki akses'
-            ], 403);
-        }
 
         if (!$user) {
             return response()->json([

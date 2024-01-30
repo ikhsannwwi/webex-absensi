@@ -4,8 +4,8 @@
         <div class="row">
             <div class="col-8" style="padding-right: 0;">
                 <!-- Menggunakan col-8 agar input lebih lebar dan menghapus padding kanan -->
-                <input type="text" class="form-control" id="inputEskulName" readonly>
-                <input type="text" class="d-none" name="eskul" id="inputEskulId">
+                <input type="text" class="form-control" id="inputEskulName" value="{{Route::is('admin.siswa.edit*') ? (array_key_exists('nama', $eskul) ? $eskul['nama'] : '') : ''}}" data-parsley-required="true" readonly>
+                <input type="text" class="d-none" name="eskul" value="{{Route::is('admin.siswa.edit*') ? (array_key_exists('id', $eskul) ? $eskul['id'] : '') : ''}}" id="inputEskulId">
             </div>
             <div class="col-4" style="padding-left: 0;">
                 <!-- Menggunakan col-4 agar tombol "Search" lebih kecil dan menghapus padding kiri -->

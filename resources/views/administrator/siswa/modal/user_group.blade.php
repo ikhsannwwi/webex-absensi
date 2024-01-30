@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-8" style="padding-right: 0;">
                 <!-- Menggunakan col-8 agar input lebih lebar dan menghapus padding kanan -->
-                <input type="text" class="form-control" value="{{Route::is('admin.siswa.edit*') ? $data->user_group->name : ''}}" id="inputUserGroupName" readonly>
+                <input type="text" class="form-control" value="{{Route::is('admin.siswa.edit*') ? $data->user_group->name : ''}}" data-parsley-required="true" id="inputUserGroupName" readonly>
                 <input type="text" class="d-none" value="{{Route::is('admin.siswa.edit*') ? $data->user_group->id : ''}}" name="user_group" id="inputUserGroupId">
             </div>
             <div class="col-4" style="padding-left: 0;">

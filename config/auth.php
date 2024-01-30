@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'siswa',
         ],
+        'pembina' => [
+            'driver' => 'session',
+            'provider' => 'pembina',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'siswa' => [
             'driver' => 'eloquent',
             'model' => App\Models\Siswa::class,
+        ],
+        'pembina' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Pembina::class,
         ],
 
         // 'users' => [
@@ -102,6 +110,12 @@ return [
             'throttle' => 60,
         ],
         'siswa' => [
+            'provider' => 'siswa',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'pembina' => [
             'provider' => 'siswa',
             'table' => 'password_resets',
             'expire' => 60,

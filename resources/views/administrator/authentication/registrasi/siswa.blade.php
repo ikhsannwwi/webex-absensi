@@ -57,36 +57,39 @@
             <h4 class="mb-2">Welcome to Sneat! 👋</h4>
             <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-            <form action="{{route('admin.registrasi.siswa.save')}}" method="POST" id="form"
-                novalidate="" data-parsley-validate>
+            <form action="{{ route('admin.registrasi.siswa.save') }}" method="POST" id="form" novalidate=""
+                data-parsley-validate>
                 @csrf
                 @method('POST')
                 <div class="mb-3">
                     <label for="inputNama" class="form-label">Nama</label>
-                    <input type="text" class="form-control" name="name" id="inputNama"
-                        placeholder="Masukan Nama"
+                    <select class="form-control" name="eskul" id="inputEskul" data-parsley-required="true">
+
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="inputNama" class="form-label">Nama</label>
+                    <input type="text" class="form-control" name="name" id="inputNama" placeholder="Masukan Nama"
                         autofocus data-parsley-required="true" autocomplete="off" />
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control" name="email" id="email"
-                        placeholder="Enter your email" data-parsley-type="email"
-                        data-parsley-trigger="change" data-parsley-error-message="Masukan alamat email yang valid."
-                        autofocus data-parsley-required="true" autocomplete="off" />
+                    <input type="text" class="form-control" name="email" id="email" placeholder="Enter your email"
+                        data-parsley-type="email" data-parsley-trigger="change"
+                        data-parsley-error-message="Masukan alamat email yang valid." autofocus data-parsley-required="true"
+                        autocomplete="off" />
                     <div class="" style="color: #dc3545" id="accessErrorEmail"></div>
                 </div>
                 <div class="mb-3">
                     <label for="inputNis" class="form-label">Nis</label>
-                    <input type="text" class="form-control" name="nis" id="inputNis"
-                        placeholder="Enter your nis" 
+                    <input type="text" class="form-control" name="nis" id="inputNis" placeholder="Enter your nis"
                         autofocus data-parsley-required="true" autocomplete="off" />
                     <div class="" style="color: #dc3545" id="accessErrorNis"></div>
                 </div>
                 <div class="mb-3">
                     <label for="inputTelepon" class="form-label">No Telepon</label>
                     <input type="text" class="form-control" name="telepon" id="inputTelepon"
-                        placeholder="Enter your telepon" 
-                        autofocus data-parsley-required="true" autocomplete="off" />
+                        placeholder="Enter your telepon" autofocus data-parsley-required="true" autocomplete="off" />
                     <div class="" style="color: #dc3545" id="accessErrorTelepon"></div>
                 </div>
                 <div class="mb-3 form-password-toggle">
@@ -94,7 +97,8 @@
                         <label class="form-label" for="password">Password</label>
                     </div>
                     <div class="input-group input-group-merge">
-                        <input type="password" class="form-control" name="password" id="passwordField" autocomplete="off"
+                        <input type="password" class="form-control" name="password" id="passwordField"
+                            autocomplete="off"
                             placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                             aria-describedby="password" />
                         <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
@@ -128,10 +132,39 @@
     </div>
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset_administrator('assets/plugins/choices-select/choices.css') }}">
+@endpush
+
 @push('js')
+    <script src="{{ asset_administrator('assets/plugins/choices-select/choices.js') }}"></script>
+
     <script src="{{ asset_administrator('assets/plugins/parsleyjs/parsley.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            var multipleFetch = new Choices('#inputEskul', {
+                allowHTML: false,
+                placeholder: true,
+                placeholderValue: 'Pick an Strokes record',
+                maxItemCount: 5,
+            }).setChoices(function() {
+                return fetch(
+                        'https://webex.smknegeri1garut.sch.id/api/eskul'
+                    )
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(response) {
+                        let data = response.data
+                        return data.map(function(data) {
+                            return {
+                                value: data.id,
+                                label: data.nama
+                            };
+                        });
+                    });
+            });
+
             //validate parsley form
             const form = document.getElementById("form");
             const validator = $(form).parsley();
@@ -183,7 +216,7 @@
                     inputNis.removeClass('is-invalid');
                     accessErrorNis.text('');
                 }
-                
+
                 // Perform remote validation
                 const remoteValidationResultTelepon = await validateRemoteTelepon();
                 const inputTelepon = $("#inputTelepon");
@@ -207,19 +240,20 @@
                     if (!validatePasswordConfirmation()) {
                         return;
                     }
-                } 
+                }
 
                 const inputPassword = $("#passwordField");
                 let accessErrorPassword = $("#accessErrorPassword");
-                if (passwordField === ''){
+                if (passwordField === '') {
                     accessErrorPassword.addClass('invalid-feedback');
                     inputPassword.addClass('is-invalid');
 
-                    accessErrorPassword.text('Value is required'); // Set the error message from the response
+                    accessErrorPassword.text(
+                        'Value is required'); // Set the error message from the response
                     indicatorNone();
 
                     return
-                }else{
+                } else {
                     accessErrorPassword.removeClass('invalid-feedback');
                     inputPassword.removeClass('is-invalid');
                     accessErrorPassword.text('');
@@ -357,7 +391,7 @@
                     };
                 }
             }
-            
+
             async function validateRemoteTelepon() {
                 const inputTelepon = $('#inputTelepon');
                 const remoteValidationUrl = "{{ route('admin.registrasi.siswa.checkTelepon') }}";

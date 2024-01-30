@@ -27,9 +27,11 @@ class AuthController extends Controller
 
     public function checkEmail(Request $request){
         if($request->ajax()){
-            $data = User::where('email', $request->email)->first();
+            $userExists = User::where('email', $request->email)->first();
+            $pembinaExists = Pembina::where('email', $request->email)->first();
+            $siswaExists = Siswa::where('email', $request->email)->first();
     
-            if(empty($data)){
+            if(empty($userExists) && empty($pembinaExists) && empty($siswaExists)){
                 return response()->json([
                     'message' => 'Email tidak terdaftar',
                     'valid' => false
@@ -45,26 +47,38 @@ class AuthController extends Controller
     public function checkPassword(Request $request) {
         if ($request->ajax()) {
             $user = User::where('email', $request->email)->first();
+            $pembina = Pembina::where('email', $request->email)->first();
+            $siswa = Siswa::where('email', $request->email)->first();
     
-            if (!$user) {
-                return response()->json([
-                    'message' => 'Email tidak ditemukan',
-                    'valid' => false
-                ]);
-            }
-    
-            if (Hash::check($request->password, $user->password)) {
+            // Check in User model
+            if ($user && Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'valid' => true
                 ]);
-            } else {
+            }
+    
+            // Check in Pembina model
+            if ($pembina && Hash::check($request->password, $pembina->password)) {
                 return response()->json([
-                    'message' => 'Password tidak sesuai',
-                    'valid' => false
+                    'valid' => true
                 ]);
             }
+    
+            // Check in Siswa model
+            if ($siswa && Hash::check($request->password, $siswa->password)) {
+                return response()->json([
+                    'valid' => true
+                ]);
+            }
+    
+            // If no match is found in any model
+            return response()->json([
+                'message' => 'Email atau password tidak sesuai',
+                'valid' => false
+            ]);
         }
     }
+    
     
     public function loginProses(Request $request)
     {
@@ -72,8 +86,11 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            // Jika autentikasi berhasil, alihkan ke halaman yang sesuai
             return redirect()->route('admin.dashboard')->with('success', 'Berhasil login');
+        } else if (Auth::guard('siswa')->attempt($credentials)) {
+            return redirect()->route('siswa.dashboard')->with('success', 'Berhasil login');
+        } else if (Auth::guard('pembina')->attempt($credentials)) {
+            return redirect()->route('pembina.dashboard')->with('success', 'Berhasil login');
         }
 
         // Jika autentikasi gagal, alihkan kembali ke halaman masuk dengan pesan error
@@ -82,8 +99,18 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::logout();
-        return redirect()->route('admin.login')->with('warning', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
+        if (auth()->user() || auth()->guard('siswa')->user() || auth()->guard('pembina')->user()) {
+            if (auth()->user()) {
+                Auth::logout();
+                return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
+            } else if (auth()->guard('siswa')->user()) {
+                Auth::guard('siswa')->logout();
+                return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
+            } else if (auth()->guard('pembina')->user()) {
+                Auth::guard('pembina')->logout();
+                return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
+            }
+        }
     }
 
     public function registrasi(){
@@ -96,6 +123,7 @@ class AuthController extends Controller
 
     public function registrasi_siswa_save(Request $request){
         $request->validate([
+            'eskul' => 'required',
             'name' => 'required',
             'email' => 'required|unique:siswa',
             'password' => 'required|min:8',
@@ -117,6 +145,7 @@ class AuthController extends Controller
             }
             
             $data = Siswa::create([
+                'eskul_id' => $request->eskul,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -141,7 +170,7 @@ class AuthController extends Controller
             ]);
         
             DB::commit();
-            return redirect()->route('admin.login')->with('success', 'Data berhasil disimpan.');
+            return redirect()->route('admin.login')->with('success', 'Berhasil membuat akun, tunggu email dari kami atau hubungi admin.');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->route('admin.registrasi.siswa')->with('error', $th->getMessage());
@@ -234,6 +263,7 @@ class AuthController extends Controller
 
     public function registrasi_pembina_save(Request $request){
         $request->validate([
+            'eskul' => 'required',
             'name' => 'required',
             'email' => 'required|unique:pembina',
             'password' => 'required|min:8',
@@ -254,7 +284,7 @@ class AuthController extends Controller
             }
             
             $data = Pembina::create([
-                'eskul_id' => 1,
+                'eskul_id' => $request->eskul,
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
@@ -278,7 +308,7 @@ class AuthController extends Controller
             ]);
         
             DB::commit();
-            return redirect()->route('admin.login')->with('success', 'Data berhasil disimpan.');
+            return redirect()->route('admin.login')->with('success', 'Berhasil membuat akun, tunggu email dari kami atau hubungi admin.');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->route('admin.registrasi.pembina')->with('error', $th->getMessage());

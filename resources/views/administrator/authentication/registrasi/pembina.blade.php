@@ -63,6 +63,12 @@
                 @method('POST')
                 <div class="mb-3">
                     <label for="inputNama" class="form-label">Nama</label>
+                    <select class="form-control" name="eskul" id="inputEskul" data-parsley-required="true">
+
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="inputNama" class="form-label">Nama</label>
                     <input type="text" class="form-control" name="name" id="inputNama"
                         placeholder="Masukan Nama"
                         autofocus data-parsley-required="true" autocomplete="off" />
@@ -121,10 +127,39 @@
     </div>
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset_administrator('assets/plugins/choices-select/choices.css') }}">
+@endpush
+
 @push('js')
+    <script src="{{ asset_administrator('assets/plugins/choices-select/choices.js') }}"></script>
+
     <script src="{{ asset_administrator('assets/plugins/parsleyjs/parsley.min.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+            var multipleFetch = new Choices('#inputEskul', {
+                allowHTML: false,
+                placeholder: true,
+                placeholderValue: 'Pick an Strokes record',
+                maxItemCount: 5,
+            }).setChoices(function() {
+                return fetch(
+                        'https://webex.smknegeri1garut.sch.id/api/eskul'
+                    )
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(response) {
+                        let data = response.data
+                        return data.map(function(data) {
+                            return {
+                                value: data.id,
+                                label: data.nama
+                            };
+                        });
+                    });
+            });
+
             //validate parsley form
             const form = document.getElementById("form");
             const validator = $(form).parsley();

@@ -50,6 +50,7 @@ class RouteServiceProvider extends ServiceProvider
             // Tambahkan kode berikut untuk mendaftarkan route admin
             $this->mapAdminRoutes();
             $this->mapSiswaRoutes();
+            $this->mapPembinaRoutes();
         });
     }
 
@@ -67,6 +68,14 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace('App\Http\Controllers\siswa') // Gantilah dengan namespace controller admin Anda
             ->group(base_path('routes/siswa.php'));
+    }
+
+    // Tambahkan method berikut di dalam class RouteServiceProvider
+    protected function mapPembinaRoutes()
+    {
+        Route::middleware('web')
+            ->namespace('App\Http\Controllers\pembina') // Gantilah dengan namespace controller admin Anda
+            ->group(base_path('routes/pembina.php'));
     }
 
     /**

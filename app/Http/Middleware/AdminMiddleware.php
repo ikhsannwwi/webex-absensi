@@ -16,7 +16,6 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        // Check if the user is authenticated as an admin
         if (auth()->guard('admin')->check()) {
             $user = auth()->guard('admin')->user();
 
@@ -27,6 +26,26 @@ class AdminMiddleware
             } else {
                 // If the status is not 1, log out the user and redirect to the login page
                 auth()->guard('admin')->logout();
+                $request->session()->invalidate();
+                return redirect()->route('admin.login')->with('info', 'Akunmu sudah tidak aktif.');
+            }
+        } else if (auth()->guard('siswa')->check()) {
+            $user = auth()->guard('siswa')->user();
+            if ($user->status == 1) {
+                auth()->guard('siswa')->login($user);
+                return $next($request);
+            } else {
+                auth()->guard('siswa')->logout();
+                $request->session()->invalidate();
+                return redirect()->route('admin.login')->with('info', 'Akunmu sudah tidak aktif.');
+            }
+        } else if (auth()->guard('pembina')->check()) {
+            $user = auth()->guard('pembina')->user();
+            if ($user->status == 1) {
+                auth()->guard('pembina')->login($user);
+                return $next($request);
+            } else {
+                auth()->guard('pembina')->logout();
                 $request->session()->invalidate();
                 return redirect()->route('admin.login')->with('info', 'Akunmu sudah tidak aktif.');
             }
