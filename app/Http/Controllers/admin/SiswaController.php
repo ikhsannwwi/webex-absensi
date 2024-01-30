@@ -352,6 +352,23 @@ class SiswaController extends Controller
         return DataTables::of($data)
             ->make(true);
     }
+
+    public function getDataEskul(){
+        // Menggunakan cURL untuk mengambil data dari API
+        $ch = curl_init("https://webex.smknegeri1garut.sch.id/api/eskul");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        
+        // Mengubah data JSON menjadi array
+        $decodedData = json_decode($data, true);
+    
+        // Pastikan kunci 'data' tersedia dalam respons JSON
+        $data = isset($decodedData['data']) ? $decodedData['data'] : [];
+    
+        // Menggunakan DataTables untuk membuat respons JSON
+        return DataTables::of($data)->make(true);
+    }
     
     public function generateKode(){
         $generateKode = 'siswa-' . substr(uniqid(), -5);

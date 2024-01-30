@@ -153,6 +153,7 @@ Route::prefix('admin')->group(function () {
         Route::get('siswa/getDetail-{id}', [SiswaController::class, 'getDetail'])->name('admin.siswa.getDetail');
         Route::get('siswa/getUserGroup', [SiswaController::class, 'getUserGroup'])->name('admin.siswa.getUserGroup');
         Route::get('siswa/getDataUserGroup', [SiswaController::class, 'getDataUserGroup'])->name('admin.siswa.getDataUserGroup');
+        Route::get('siswa/getDataEskul', [SiswaController::class, 'getDataEskul'])->name('admin.siswa.getDataEskul');
         Route::post('siswa/changeStatus',[SiswaController::class, 'changeStatus'])->name('admin.siswa.changeStatus');
         Route::get('siswa/generateKode',[SiswaController::class, 'generateKode'])->name('admin.siswa.generateKode');
         Route::post('siswa/checkEmail',[SiswaController::class, 'checkEmail'])->name('admin.siswa.checkEmail');
@@ -176,6 +177,7 @@ Route::prefix('admin')->group(function () {
         Route::get('pembina/getDetail-{id}', [PembinaController::class, 'getDetail'])->name('admin.pembina.getDetail');
         Route::get('pembina/getUserGroup', [PembinaController::class, 'getUserGroup'])->name('admin.pembina.getUserGroup');
         Route::get('pembina/getDataUserGroup', [PembinaController::class, 'getDataUserGroup'])->name('admin.pembina.getDataUserGroup');
+        Route::get('pembina/getDataEskul', [PembinaController::class, 'getDataEskul'])->name('admin.pembina.getDataEskul');
         Route::post('pembina/changeStatus',[PembinaController::class, 'changeStatus'])->name('admin.pembina.changeStatus');
         Route::get('pembina/generateKode',[PembinaController::class, 'generateKode'])->name('admin.pembina.generateKode');
         Route::post('pembina/checkEmail',[PembinaController::class, 'checkEmail'])->name('admin.pembina.checkEmail');

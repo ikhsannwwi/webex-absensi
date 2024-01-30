@@ -26,6 +26,8 @@
                                 
                                 @include('administrator.siswa.modal.user_group')
 
+                                @include('administrator.siswa.modal.eskul')
+
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <div class="form-group mandatory">
@@ -162,6 +164,8 @@
         </div>
     </div>
     <!-- Basic Tables end -->
+
+
 @endsection
 
 @push('js')

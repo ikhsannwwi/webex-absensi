@@ -22,17 +22,17 @@ class CreatePembinaTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->timestamps();
-            $table->SoftDeletes();
-            $table->foreignId('created_by')->nullable();
-            $table->foreignId('updated_by')->nullable();
-            $table->foreignId('deleted_by')->nullable();
 
             $table->boolean('confirm');
             $table->string('kode');
             $table->foreignId('user_group_id');
             $table->uuid('uuid')->after('id');
             $table->integer('status');
+            $table->timestamps();
+            $table->SoftDeletes();
+            $table->foreignId('created_by')->nullable();
+            $table->foreignId('updated_by')->nullable();
+            $table->foreignId('deleted_by')->nullable();
         });
     }
 
