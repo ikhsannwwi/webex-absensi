@@ -32,7 +32,9 @@ class DataServiceProvider extends ServiceProvider
             'administrator.authentication.footer',
             'administrator.authentication.header',
             'administrator.profile.reset_password.template',
-            'administrator.logs.export'
+            'administrator.logs.export',
+
+            'otp.template'
         ], function ($view) {
             $settings = Setting::get()->toArray();
         

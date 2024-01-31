@@ -32,8 +32,18 @@ class AdminMiddleware
         } else if (auth()->guard('siswa')->check()) {
             $user = auth()->guard('siswa')->user();
             if ($user->status == 1) {
-                auth()->guard('siswa')->login($user);
-                return $next($request);
+                if ($user->confirm == 1) {
+                    if ($user->email_verified_at != null) {
+                        auth()->guard('siswa')->login($user);
+                        return $next($request);
+                    } else {
+                        return redirect()->route('siswa.verified', $user->uuid)->with('info', 'Akunmu belum terverifikasi.');
+                    }
+                } else {
+                    auth()->guard('siswa')->logout();
+                    $request->session()->invalidate();
+                    return redirect()->route('admin.login')->with('info', 'Akunmu belum diacc. Konfirmasi ke admin ekstrakurikulermu');
+                }
             } else {
                 auth()->guard('siswa')->logout();
                 $request->session()->invalidate();
@@ -42,8 +52,14 @@ class AdminMiddleware
         } else if (auth()->guard('pembina')->check()) {
             $user = auth()->guard('pembina')->user();
             if ($user->status == 1) {
-                auth()->guard('pembina')->login($user);
-                return $next($request);
+                if ($user->confirm == 1) {
+                    auth()->guard('pembina')->login($user);
+                    return $next($request);
+                } else {
+                    auth()->guard('pembina')->logout();
+                    $request->session()->invalidate();
+                    return redirect()->route('admin.login')->with('info', 'Akunmu belum diacc. Konfirmasi ke admin ekstrakurikulermu');
+                }
             } else {
                 auth()->guard('pembina')->logout();
                 $request->session()->invalidate();

@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.5",
         "ramsey/uuid": "^4.2",
         "stevebauman/location": "^6.6",
+        "twilio/sdk": "^7.14",
         "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {

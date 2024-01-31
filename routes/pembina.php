@@ -16,5 +16,7 @@ use App\Http\Controllers\pembina\DashboardController;
 */
 
 Route::prefix('pembina')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('pembina.dashboard');
+    Route::middleware(['auth.admin'])->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('pembina.dashboard');
+    });
 });

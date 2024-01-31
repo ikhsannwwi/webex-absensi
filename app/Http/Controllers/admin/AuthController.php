@@ -111,6 +111,7 @@ class AuthController extends Controller
                 return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
             }
         }
+        return redirect()->route('admin.login')->with('info', 'Anda belum login.');
     }
 
     public function registrasi(){
@@ -372,5 +373,11 @@ class AuthController extends Controller
                 ]);
             }
         }
+    }
+
+    //verified
+
+    public function verified(Request $request, $uuid){
+        
     }
 }
