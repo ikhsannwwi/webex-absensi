@@ -5,6 +5,8 @@ namespace App\Http\Controllers\admin;
 use DB;
 use File;
 use DataTables;
+use App\Models\Siswa;
+use App\Models\Pembina;
 use App\Models\admin\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -205,7 +207,7 @@ class ProfileController extends Controller
 
     public function email(Request $request){
         $request->validate([
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email',
         ]);
 
         $email = $request->input('email');
@@ -216,17 +218,25 @@ class ProfileController extends Controller
             ['token' => $token, 'created_at' => now()]
         );
 
-        $user = User::where('email', $email)->first();
+        $user_main = User::where('email', $email)->first();
+        $siswa = Siswa::where('email', $email)->first();
+        $pembina = Pembina::where('email', $email)->first();
 
-        $mailData = [
-            'title' => 'Reset Password',
-            'email' => $email,
-            'token' => $token,
-            'username' => $user->name,
-            'resetLink' => route('admin.profile.password.reset', $token),
-        ];
-        Mail::to($email)->send(new ResetPasswordMail($mailData));
-        return redirect(route('admin.profile.password.request'))->with('success', 'Tautan berhasil dikirim melalui email');
+        $user = $user_main ?? $siswa ?? $pembina;
+
+        if ($user) {
+            $mailData = [
+                'title' => 'Reset Password',
+                'email' => $email,
+                'token' => $token,
+                'username' => $user->name ?? 'User',
+                'resetLink' => route('admin.profile.password.reset', $token),
+            ];
+            Mail::to($email)->send(new ResetPasswordMail($mailData));
+            return redirect(route('admin.profile.password.request'))->with('success', 'Tautan berhasil dikirim melalui email');
+        }else{
+            return redirect(route('admin.profile.password.request'))->with('error', 'Gagal');
+        }
     }
 
     public function resetPassword($token){
@@ -245,26 +255,40 @@ class ProfileController extends Controller
             'password' => 'required|min:8',
             'konfirmasi_password' => 'required|min:8|same:password',
         ]);
-
+    
         $resetPassword = ResetPassword::where('token', $token)
                                   ->where('email', $request->input('email'))
                                   ->first();
-
+    
         if (!$resetPassword) {
             return redirect(route('admin.profile.password.reset', $token))->with('error', 'Email tidak sesuai');
         }
         
-        $user = User::where('email',$request->email)->first();
-        $user->update([
-            'password' => Hash::make($request->password),
-            'remember_token' => Str::random(60),
-        ]);
-
-        // Hapus token dari tabel reset password
-        ResetPassword::where('token', $token)
-            ->where('email', $request->input('email'))
-            ->delete();
-
-        return redirect()->route('admin.login')->with('success', 'Password has been reset successfully.');
+        // Ambil user dari berbagai model
+        $user_main = User::where('email', $request->email)->first();
+        $siswa = Siswa::where('email', $request->email)->first();
+        $pembina = Pembina::where('email', $request->email)->first();
+    
+        // Pilih model yang ditemukan pertama
+        $user = $user_main ?? $siswa ?? $pembina;
+    
+        // Pastikan $user bukan null dan merupakan instance dari model yang sesuai
+        if ($user instanceof User || $user instanceof Siswa || $user instanceof Pembina) {
+            $user->update([
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(60),
+            ]);
+    
+            // Hapus token dari tabel reset password
+            ResetPassword::where('token', $token)
+                ->where('email', $request->input('email'))
+                ->delete();
+    
+            return redirect()->route('admin.login')->with('success', 'Password has been reset successfully.');
+        } else {
+            // Handle case when no user is found or when the user is not an instance of expected models.
+            return redirect(route('admin.profile.password.reset', $token))->with('error', 'User tidak ditemukan');
+        }
     }
+    
 }
