@@ -105,10 +105,10 @@ class AuthController extends Controller
                 return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
             } else if (auth()->guard('siswa')->user()) {
                 Auth::guard('siswa')->logout();
-                return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
+                return redirect()->route('siswa.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
             } else if (auth()->guard('pembina')->user()) {
                 Auth::guard('pembina')->logout();
-                return redirect()->route('admin.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
+                return redirect()->route('pembina.login')->with('success', 'Berhasil Logout.'); // Ganti 'login' dengan rute halaman masuk yang sesuai
             }
         }
         return redirect()->route('admin.login')->with('info', 'Anda belum login.');
@@ -373,11 +373,5 @@ class AuthController extends Controller
                 ]);
             }
         }
-    }
-
-    //verified
-
-    public function verified(Request $request, $uuid){
-        
     }
 }

@@ -33,10 +33,13 @@ class OtpController extends Controller
         $phoneNumber = '+62' . substr($user->no_telepon, 1);
         if ($request->channel === 'mail') {
             $this->sendMail($user, $otpCode);
+            $channel = 'Mail';
         }else if($request->channel === 'sms'){
             $this->sendSms($phoneNumber, $otpCode);
+            $channel = 'SMS';
         }else if($request->channel === 'whatsapp'){
             $this->sendWhatsapp($phoneNumber, $otpCode);
+            $channel = 'Whatsapp';
         }
 
         // Simpan OTP ke dalam database
@@ -53,7 +56,7 @@ class OtpController extends Controller
             'expires_at' => now()->addMinutes(5), // Sesuaikan dengan kebutuhan Anda
         ]);
 
-        return response()->json(['message' => 'OTP sent successfully']);
+        return response()->json(['message' => 'OTP sent successfully. Please check your ' . $channel]);
     }
 
     private function sendSms($phoneNumber, $otpCode)
