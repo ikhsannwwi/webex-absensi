@@ -26,7 +26,7 @@ class CreatePembinaTable extends Migration
             $table->boolean('confirm');
             $table->string('kode');
             $table->foreignId('user_group_id');
-            $table->uuid('uuid')->after('id');
+            $table->uuid('uuid');
             $table->integer('status');
             $table->timestamps();
             $table->SoftDeletes();

@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\admin\viewController;
-use App\Http\Controllers\landingController;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\ClearController;
+use App\Http\Controllers\landingController;
+use App\Http\Controllers\admin\viewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,19 +17,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/ms-admin-ikhsannawawi', function () {
+Route::get('clear/migrate/fresh', function () {
     Artisan::call('migrate:fresh --seed');
-    return redirect()->route('index');
+    return redirect()->route('web.index');
 });
 
-Route::get('/', [landingController::class, 'index'])->name('web.index');
-Route::get('/category/game-android', [landingController::class, 'game_android'])->name('game_android');
-Route::get('/category/game-android-mod', [landingController::class, 'game_android_mod'])->name('game_android_mod');
-Route::get('/category/game-pc', [landingController::class, 'game_pc'])->name('game_pc');
-Route::get('/about-us', [landingController::class, 'about_us'])->name('about_us');
-Route::get('/profile', [landingController::class, 'profile'])->name('profile');
-Route::get('/detail-app', [landingController::class, 'detail_app'])->name('detail_app');
+Route::prefix('clear')->group(function () {
+    Route::get('/all', [ClearController::class, 'clearOptimize'])->name('clear.all');
+    Route::get('/config', [ClearController::class, 'clearConfig'])->name('clear.config');
+    Route::get('/cache', [ClearController::class, 'clearCache'])->name('clear.cache');
+    Route::get('/migrate', [ClearController::class, 'migrate'])->name('migrate');
+    Route::get('/fresh', [ClearController::class, 'migrateFresh'])->name('migrate.fresh');
+    Route::get('/seeder', [ClearController::class, 'seeder'])->name('seeder');
+    Route::get('/cart', [CartController::class, 'clearCart'])->name('clear_cart');
+    Route::get('/storage', [ClearController::class, 'storageLink'])->name('storage');
+    Route::get('/seed-permission', [ClearController::class, 'seedPermissions'])->name('seedPermissions');
+});
 
-
-// ------------------------------------------  Admin -----------------------------------------------------------------
-Route::get('/admin/main-admin', [viewController::class, 'main_admin'])->name('main_admin');
+Route::get('/', function () {
+    return redirect()->route('admin.login');
+})->name('web.index');

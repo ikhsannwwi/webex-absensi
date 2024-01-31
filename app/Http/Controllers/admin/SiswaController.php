@@ -318,6 +318,7 @@ class SiswaController extends Controller
         }
         
         $data['status'] = $request->status == "Aktif" ? 1 : 0;
+        $data['confirm'] = $request->status == "Aktif" ? 1 : 0;
         $log = $request->status;
         $id = $request->ix;
         $updates = Siswa::where(["id" => $id])->first();
